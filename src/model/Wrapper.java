@@ -5,7 +5,6 @@ package model;
 
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.PrimaryActivity;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.Receptor;
-import it.unibo.ai.ePolicy.GlobalOpt.IO.Input.GOParetoInputParam;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.GOParetoOutput;
 import it.unibo.ai.ePolicy.GlobalOpt.WS.Services.GlobalOptWSSEI;
 
@@ -183,15 +182,16 @@ public class Wrapper {
 	/**
 	 * @param builder
 	 */
-	public GOParetoOutput compute(GOParetoInputParam input) {
-		if (input == null)
-			throw new IllegalArgumentException("Illegal 'input' argument in Wrapper.compute(GOParetoInputParam): "
-					+ input);
-		locale = input.getLoc();
-		GOParetoOutput result = null;
+	public void compute(ParetoBuilder builder) {
+		if (builder == null)
+			throw new IllegalArgumentException("Illegal 'builder' argument in Wrapper.compute(InputBuilder): "
+					+ builder);
+		// HttpServletRequest request = builder.getRequest();
+		locale = builder.getLocale();
 		try {
 			duration = System.currentTimeMillis();
-			result = proxy.computePareto(input);
+			GOParetoOutput result = proxy.computePareto(builder.build());
+			System.err.println(">>> " + result);
 			computations += 1;
 			timestamp = null;
 			duration = System.currentTimeMillis() - duration;
@@ -206,7 +206,6 @@ public class Wrapper {
 			e.printStackTrace();
 		}
 		assert invariant() : "Illegal state in Wrapper.compute(GOParetoInputParam)";
-		return result;
 	}
 
 	/**

@@ -7,6 +7,7 @@ import it.unibo.ai.ePolicy.GlobalOpt.Domain.AbsoluteMaxBound;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.AbsoluteMinBound;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.Constraint;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.GenericConstraint;
+import it.unibo.ai.ePolicy.GlobalOpt.Domain.Receptor;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Input.GOParetoInputParam;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import javax.servlet.ServletContext;
  * @author stefano
  * 
  */
-public class InputBuilder {
+public class ParetoBuilder {
 
 	private static final String MINMAX = "min_max_source(";
 	private static final String PAR = ")";
@@ -30,7 +31,7 @@ public class InputBuilder {
 	private Constraint[] constraints;
 
 	/**
-	 * The servlet context.
+	 * The HTTP servlet context.
 	 */
 	private ServletContext context;
 
@@ -50,20 +51,23 @@ public class InputBuilder {
 	private Integer scenarios;
 
 	/**
-	 * The default constructor.
+	 * Default constructor.
+	 * 
+	 * @param request
+	 *            the HTTP servlet request
 	 */
-	public InputBuilder(ServletContext context) {
+	public ParetoBuilder(ServletContext context) {
 		if (context == null)
-			throw new IllegalArgumentException(
-					"Illegal 'context' argument in InputParetoInputBuilder(ServletContext): " + context);
+			throw new IllegalArgumentException("Illegal 'context' argument in ParetoBuilder(ServletContext): "
+					+ context);
 		this.context = context;
 		this.clear();
-		assert invariant() : "Illegal state in InputParetoInputBuilder(ServletContext)";
+		assert invariant() : "Illegal state in ParetoBuilder(HttpServletRequest)";
 	}
 
 	/**
 	 * Returns an instance of <code>GlobalOptInputParam</code> created from the
-	 * fields set on this InputBuilder.
+	 * fields set on this ParetoBuilder.
 	 * 
 	 * @return a <code>GlobalOptInputParam</code>
 	 */
@@ -78,16 +82,50 @@ public class InputBuilder {
 	}
 
 	/**
-	 * Resets the InputBuilder to its initial, empty state.
+	 * Returns the InvokeBuilder to maximize the receptor.
 	 * 
-	 * @return this InputBuilder
+	 * @param receptor
+	 *            the receptor to maximize
+	 * @return the InvokeBuilder to maximize the receptor
 	 */
-	public InputBuilder clear() {
+	public InvokeBuilder maximize(Receptor receptor) {
+		if (receptor == null)
+			throw new IllegalArgumentException("Illegal 'receptor' argument in ParetoBuilder.maximize(Receptor): "
+					+ receptor);
+		InvokeBuilder result = new InvokeBuilder(context, locale, constraints);
+		result.setFunction("max(" + receptor.getShortName() + ")");
+		assert invariant() : "Illegal state in ParetoBuilder.maximize(Receptor)";
+		return result;
+	}
+
+	/**
+	 * Returns the InvokeBuilder to minimize the receptor.
+	 * 
+	 * @param receptor
+	 *            the receptor to minimize
+	 * @return the InvokeBuilder to minimize the receptor
+	 */
+	public InvokeBuilder minimize(Receptor receptor) {
+		if (receptor == null)
+			throw new IllegalArgumentException("Illegal 'receptor' argument in ParetoBuilder.minimize(Receptor): "
+					+ receptor);
+		InvokeBuilder result = new InvokeBuilder(context, locale, constraints);
+		result.setFunction("min(" + receptor.getShortName() + ")");
+		assert invariant() : "Illegal state in ParetoBuilder.minimize(Receptor)";
+		return result;
+	}
+
+	/**
+	 * Resets the ParetoBuilder to its initial, empty state.
+	 * 
+	 * @return this ParetoBuilder
+	 */
+	public ParetoBuilder clear() {
 		constraints = new Constraint[0];
 		functions = new String[0];
 		locale = new Locale("en", "US");
 		scenarios = null;
-		assert invariant() : "Illegal state in InputParetoInputBuilder.clear()";
+		assert invariant() : "Illegal state in InputParetoParetoBuilder.clear()";
 		return this;
 	}
 
@@ -137,7 +175,7 @@ public class InputBuilder {
 	 * @return the current locale
 	 */
 	public Locale getLocale() {
-		assert invariant() : "Illegal state in InputBuilder.getLocale()";
+		assert invariant() : "Illegal state in ParetoBuilder.getLocale()";
 		return locale;
 	}
 
@@ -147,7 +185,7 @@ public class InputBuilder {
 	 * @return the current number of scenarios locale
 	 */
 	public int getScenarios() {
-		assert invariant() : "Illegal state in InputBuilder.getScenarios()";
+		assert invariant() : "Illegal state in ParetoBuilder.getScenarios()";
 		return scenarios;
 	}
 
@@ -168,7 +206,7 @@ public class InputBuilder {
 	 *            a string describing the constraints
 	 * @return this builder
 	 */
-	public InputBuilder setConstraints(String desc) {
+	public ParetoBuilder setConstraints(String desc) {
 		// TODO More sophisticated parsers are required to cope with undesired
 		// line breaks
 		List<Constraint> list = new ArrayList<Constraint>();
@@ -201,11 +239,11 @@ public class InputBuilder {
 	 *            a string describing the objective functions
 	 * @return this builder
 	 */
-	public InputBuilder setFunctions(String desc) {
+	public ParetoBuilder setFunctions(String desc) {
 		// TODO More sophisticated parsers are required to cope with undesired
 		// line breaks
 		if (desc == null || (desc = desc.trim()).isEmpty())
-			throw new IllegalArgumentException("Illegal 'desc' argument in InputBuilder.setFunctions(String): " + desc);
+			throw new IllegalArgumentException("Illegal 'desc' argument in ParetoBuilder.setFunctions(String): " + desc);
 		try {
 			functions = desc.split("\n");
 			for (int i = 0; i < functions.length; i++)
@@ -222,18 +260,18 @@ public class InputBuilder {
 	 * 
 	 * @param desc
 	 *            a string describing the locale
-	 * @return this InputBuilder
+	 * @return this ParetoBuilder
 	 */
-	public InputBuilder setLocale(String desc) {
+	public ParetoBuilder setLocale(String desc) {
 		if (desc == null || (desc = desc.trim()).isEmpty())
-			throw new IllegalArgumentException("Illegal 'desc' argument in InputBuilder.setLocale(String): " + desc);
+			throw new IllegalArgumentException("Illegal 'desc' argument in ParetoBuilder.setLocale(String): " + desc);
 		context.log("> locale: '" + desc + "'");
 		locale = new Locale("en", "US");
 		if ("it".equals(desc))
 			locale = new Locale("it", "IT");
 		if ("en".equals(desc))
 			locale = new Locale("en", "US");
-		assert invariant() : "Illegal state in InputBuilder.setLocale(String)";
+		assert invariant() : "Illegal state in ParetoBuilder.setLocale(String)";
 		return this;
 	}
 
@@ -242,16 +280,16 @@ public class InputBuilder {
 	 * 
 	 * @param desc
 	 *            a string describing the number of scenarios
-	 * @return this InputBuilder
+	 * @return this ParetoBuilder
 	 */
-	public InputBuilder setScenarios(String desc) {
+	public ParetoBuilder setScenarios(String desc) {
 		if (desc == null || (desc = desc.trim()).isEmpty())
-			throw new IllegalArgumentException("Illegal 'desc' argument in InputBuilder.setScenarios(String): " + desc);
+			throw new IllegalArgumentException("Illegal 'desc' argument in ParetoBuilder.setScenarios(String): " + desc);
 		try {
 			scenarios = Integer.parseInt(desc);
 		} catch (NumberFormatException ex) {
 		}
-		assert invariant() : "Illegal state in InputBuilder.setScenarios(String)";
+		assert invariant() : "Illegal state in ParetoBuilder.setScenarios(String)";
 		return this;
 	}
 
