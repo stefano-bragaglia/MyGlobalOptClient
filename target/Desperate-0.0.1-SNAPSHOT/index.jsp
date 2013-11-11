@@ -64,8 +64,6 @@ body {
 </head>
 
 <body>
-	<p><%=times %></p>
-
 	<!-- Fixed navbar -->
 	<%@include file="includes/navbar.jsp"%>
 	<!-- Page container -->

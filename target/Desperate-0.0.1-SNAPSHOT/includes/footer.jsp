@@ -3,8 +3,8 @@
 	<div class="container">
 		<hr />
 		<p class="muted credit text-center">
-			<small>You are running the <%=Wrapper.getInstance().getVersion()%>
-				version of the application.
+			<small>You are running the <strong><%=Wrapper.getInstance().getVersion()%>
+				version</strong> of the application.
 			</small>
 		</p>
 	</div>

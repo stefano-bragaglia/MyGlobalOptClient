@@ -1,7 +1,8 @@
 model/Proxy.class
 model/ParetoBuilder.class
-model/Wrapper$RComparator.class
 client/Servlet.class
 model/Wrapper$1.class
-model/Wrapper$PAComparator.class
 model/Wrapper.class
+model/InvokeBuilder.class
+model/Wrapper$RComparator.class
+model/Wrapper$PAComparator.class

@@ -43,8 +43,7 @@
 				functions : $("#inputFunctions").val(),
 				scenarios : $("#inputScenarios").val()
 			}, function(result) {
-<%-- 				$('#statComputations').text(<% out.print("\"" + Wrapper.getInstance().getComputations() + "\""); %>); --%>
-<%-- 				$('#statTimestamp').text(<% out.print("\"" + Wrapper.getInstance().getTimestamp() + "\""); %>); --%>
+				$('#content').html(result);
 				$('#navtabQuery').removeClass('active');
 				$('#query').removeClass('active');
 				$('#navtabResults').addClass('active');

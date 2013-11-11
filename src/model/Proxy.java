@@ -43,11 +43,27 @@ public class Proxy implements GlobalOptWSSEI {
 	private GlobalOptWSSEI proxy;
 
 	/**
+	 * The only instance on this proxy.
+	 */
+	private static GlobalOptWSSEI instance = null;
+
+	/**
+	 * Returns the only instance on this proxy.
+	 * 
+	 * @return the only instance on this proxy
+	 */
+	public static GlobalOptWSSEI getInstance() throws MalformedURLException {
+		if (instance == null)
+			instance = new Proxy();
+		return instance;
+	}
+
+	/**
 	 * Default constructor.
 	 * 
 	 * @throws MalformedURLException
 	 */
-	public Proxy() throws MalformedURLException {
+	private Proxy() throws MalformedURLException {
 		QName nameService = new QName(NAMESPACE, "GlobalOpt");
 		QName namePort = new QName(NAMESPACE, "GlobalOptSimpleWSSEIPort");
 		Service service = Service.create(new URL(URI + "/?wsdl"), nameService);
