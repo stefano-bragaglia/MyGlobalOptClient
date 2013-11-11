@@ -4,5 +4,7 @@ client/Servlet.class
 model/Wrapper$1.class
 model/Wrapper.class
 model/InvokeBuilder.class
+model/Solution.class
 model/Wrapper$RComparator.class
+model/Helper.class
 model/Wrapper$PAComparator.class

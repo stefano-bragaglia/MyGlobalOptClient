@@ -17,7 +17,7 @@
 						<hr />
 						<%@include file="query/buttons.jsp"%>
 						<div id="modalProgress" class="modal hide fade" tabindex="-1"
-							 data-backdrop="static" data-keyboard="false">
+							data-backdrop="static" data-keyboard="false">
 
 							<div class="modal-header">
 								<h3 id="myModalLabel">Progress</h3>
@@ -61,9 +61,12 @@
 				<li><strong>No of scenarios:</strong> tell the amount of
 					desired scenarios to compare</li>
 			</ol>
-
+			<div class="alert alert-info">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<small><strong>Warning!</strong> No syntax check is
+					performed on the given constraints and objective functions.</small>
+			</div>
 			<hr />
-
 			<p class="lead">References</p>
 			<div class="tabbable">
 				<ul class="nav nav-tabs nav-tabs-border">

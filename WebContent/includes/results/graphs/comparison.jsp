@@ -11,7 +11,8 @@
 								type : 'line'
 							},
 							title : {
-								text : 'Pareto-optimal plans for given objectives',
+								text : '',
+								// text : 'Pareto-optimal plans for given objectives',
 								x : -80
 							},
 							pane : {

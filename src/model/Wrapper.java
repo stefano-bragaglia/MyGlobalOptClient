@@ -5,19 +5,11 @@ package model;
 
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.PrimaryActivity;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.Receptor;
-import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.GOParetoOutput;
-import it.unibo.ai.ePolicy.GlobalOpt.WS.Services.GlobalOptWSSEI;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Locale;
-
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-import javax.xml.ws.soap.SOAPBinding;
 
 /**
  * @author stefano
@@ -84,20 +76,7 @@ public class Wrapper {
 	 */
 	public static final String MAP_ENG_ITA;
 
-	/**
-	 * The namespace of the Global Optimiser service.
-	 */
-	private static final String NAMESPACE;
-
-	/**
-	 * The URI where the Global Optimiser service is deployed.
-	 */
-	private static final String URI;
-
 	static {
-		NAMESPACE = "http://Services.WS.GlobalOpt.ePolicy.ai.unibo.it/";
-		URI = "http://localhost:8080/GlobalOptWS/services/GlobalOpt";
-		// URI ="http://137.204.45.59:8079/GlobalOptWS/services/GlobalOpt";
 		ENG = new Locale("en", "US");
 		ITA = new Locale("it", "IT");
 		String map = "";
@@ -128,29 +107,9 @@ public class Wrapper {
 	}
 
 	/**
-	 * The counter for computations during the current session.
-	 */
-	private volatile int computations;
-
-	/**
-	 * The duration of the last computation.
-	 */
-	private volatile long duration;
-
-	/**
 	 * The current locale.
 	 */
 	private Locale locale;
-
-	/**
-	 * The proxy for the Global Optimiser service.
-	 */
-	private GlobalOptWSSEI proxy;
-
-	/**
-	 * The time required for the last computation.
-	 */
-	private volatile String timestamp;
 
 	/**
 	 * The version of the web application.
@@ -163,92 +122,8 @@ public class Wrapper {
 	 * @throws MalformedURLException
 	 */
 	private Wrapper() throws MalformedURLException {
-		computations = 0;
-		duration = 0;
 		locale = ENG;
-		QName nameService = new QName(NAMESPACE, "GlobalOpt");
-		QName namePort = new QName(NAMESPACE, "GlobalOptSimpleWSSEIPort");
-		Service service = Service.create(new URL(URI + "/?wsdl"), nameService);
-		service.addPort(namePort, SOAPBinding.SOAP11HTTP_BINDING, URI);
-		proxy = service.getPort(GlobalOptWSSEI.class);
-		// Client client = ClientProxy.getClient(proxy);
-		// HTTPConduit httpConduit = (HTTPConduit) client.getConduit();
-		// httpConduit.getClient().setReceiveTimeout(1000 * 60 * 30);
-		timestamp = null;
-		version = null;
 		assert invariant() : "Illegal state in Wrapper()";
-	}
-
-	/**
-	 * @param builder
-	 */
-	public void compute(ParetoBuilder builder) {
-		if (builder == null)
-			throw new IllegalArgumentException("Illegal 'builder' argument in Wrapper.compute(InputBuilder): "
-					+ builder);
-		// HttpServletRequest request = builder.getRequest();
-		locale = builder.getLocale();
-		try {
-			duration = System.currentTimeMillis();
-			GOParetoOutput result = proxy.computePareto(builder.build());
-			System.err.println(">>> " + result);
-			computations += 1;
-			timestamp = null;
-			duration = System.currentTimeMillis() - duration;
-			// if (computations >= 0)
-			// throw new IllegalArgumentException("Computations: " +
-			// computations + " - Duration: " + duration);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		assert invariant() : "Illegal state in Wrapper.compute(GOParetoInputParam)";
-	}
-
-	/**
-	 * Returns the number of computations during the current session.
-	 * 
-	 * @return the number of computations during the current session
-	 */
-	public int getComputations() {
-		assert invariant() : "Illegal state in Wrapper.getComputations()";
-		return computations;
-	}
-
-	/**
-	 * Returns the duration of the last computation (if any).
-	 * 
-	 * @return the duration of the last computation
-	 */
-	public long getDuration() {
-		assert invariant() : "Illegal state in Wrapper.getDuration()";
-		return duration;
-	}
-
-	/**
-	 * Returns the time required by the last computation (if any).
-	 * 
-	 * @return the time required by the last computation
-	 */
-	public String getTimestamp() {
-		if (timestamp == null) {
-			long hours = (duration / 3600000) % 24;
-			long minutes = (duration / 60000) % 60;
-			long seconds = (duration / 1000) % 60;
-			long millis = duration % 1000;
-			timestamp = millis + "ms";
-			if (seconds > 0 || minutes > 0 || hours > 0)
-				timestamp = seconds + "s " + timestamp;
-			if (minutes > 0 || hours > 0)
-				timestamp = minutes + "m " + timestamp;
-			if (hours > 0)
-				timestamp = hours + "h " + timestamp;
-		}
-		assert invariant() : "Illegal state in Wrapper.getTimestamp()";
-		return timestamp;
 	}
 
 	/**
@@ -256,7 +131,11 @@ public class Wrapper {
 	 */
 	public String getVersion() {
 		if (version == null)
-			version = proxy.getVersion();
+			try {
+				version = Proxy.getInstance().getVersion();
+			} catch (MalformedURLException e) {
+				version = "latest";
+			}
 		assert invariant() : "Illegal state in Wrapper.getVersion()";
 		return version;
 	}
@@ -265,19 +144,7 @@ public class Wrapper {
 	 * @return
 	 */
 	private boolean invariant() {
-		return (computations >= 0 && locale != null && proxy != null);
-	}
-
-	/**
-	 * Tells whether at least a computations has been executed.
-	 * 
-	 * @return <code>true</code> if a least a computations has been executed,
-	 *         <code>false</code> otherwise
-	 */
-	public boolean isComputed() {
-		boolean result = (computations > 0);
-		assert invariant() : "Illegal state in Wrapper.isComputed()";
-		return result;
+		return (locale != null);
 	}
 
 	/**

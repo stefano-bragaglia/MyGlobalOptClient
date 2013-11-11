@@ -7,14 +7,11 @@ import it.unibo.ai.ePolicy.GlobalOpt.Domain.AbsoluteMaxBound;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.AbsoluteMinBound;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.Constraint;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.GenericConstraint;
-import it.unibo.ai.ePolicy.GlobalOpt.Domain.Receptor;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Input.GOParetoInputParam;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import javax.servlet.ServletContext;
 
 /**
  * @author stefano
@@ -29,11 +26,6 @@ public class ParetoBuilder {
 	 * The chosen constraints.
 	 */
 	private Constraint[] constraints;
-
-	/**
-	 * The HTTP servlet context.
-	 */
-	private ServletContext context;
 
 	/**
 	 * The chosen functions.
@@ -52,17 +44,10 @@ public class ParetoBuilder {
 
 	/**
 	 * Default constructor.
-	 * 
-	 * @param request
-	 *            the HTTP servlet request
 	 */
-	public ParetoBuilder(ServletContext context) {
-		if (context == null)
-			throw new IllegalArgumentException("Illegal 'context' argument in ParetoBuilder(ServletContext): "
-					+ context);
-		this.context = context;
+	public ParetoBuilder() {
 		this.clear();
-		assert invariant() : "Illegal state in ParetoBuilder(HttpServletRequest)";
+		assert invariant() : "Illegal state in ParetoBuilder()";
 	}
 
 	/**
@@ -82,36 +67,13 @@ public class ParetoBuilder {
 	}
 
 	/**
-	 * Returns the InvokeBuilder to maximize the receptor.
+	 * Returns an InvokeBuilder out of this ParetoBuilder.
 	 * 
-	 * @param receptor
-	 *            the receptor to maximize
-	 * @return the InvokeBuilder to maximize the receptor
+	 * @return the InvokeBuilder out of this ParetoBuilder
 	 */
-	public InvokeBuilder maximize(Receptor receptor) {
-		if (receptor == null)
-			throw new IllegalArgumentException("Illegal 'receptor' argument in ParetoBuilder.maximize(Receptor): "
-					+ receptor);
-		InvokeBuilder result = new InvokeBuilder(context, locale, constraints);
-		result.setFunction("max(" + receptor.getShortName() + ")");
-		assert invariant() : "Illegal state in ParetoBuilder.maximize(Receptor)";
-		return result;
-	}
-
-	/**
-	 * Returns the InvokeBuilder to minimize the receptor.
-	 * 
-	 * @param receptor
-	 *            the receptor to minimize
-	 * @return the InvokeBuilder to minimize the receptor
-	 */
-	public InvokeBuilder minimize(Receptor receptor) {
-		if (receptor == null)
-			throw new IllegalArgumentException("Illegal 'receptor' argument in ParetoBuilder.minimize(Receptor): "
-					+ receptor);
-		InvokeBuilder result = new InvokeBuilder(context, locale, constraints);
-		result.setFunction("min(" + receptor.getShortName() + ")");
-		assert invariant() : "Illegal state in ParetoBuilder.minimize(Receptor)";
+	public InvokeBuilder stem() {
+		InvokeBuilder result = new InvokeBuilder(locale, constraints);
+		assert invariant() : "Illegal state in ParetoBuilder.build()";
 		return result;
 	}
 
@@ -196,7 +158,7 @@ public class ParetoBuilder {
 	 *         otherwise
 	 */
 	private boolean invariant() {
-		return (context != null);
+		return (true);
 	}
 
 	/**
@@ -204,7 +166,7 @@ public class ParetoBuilder {
 	 * 
 	 * @param desc
 	 *            a string describing the constraints
-	 * @return this builder
+	 * @return this ParetoBuilder
 	 */
 	public ParetoBuilder setConstraints(String desc) {
 		// TODO More sophisticated parsers are required to cope with undesired
@@ -227,9 +189,8 @@ public class ParetoBuilder {
 			}
 		}
 		constraints = list.toArray(new Constraint[list.size()]);
-		assert invariant() : "Illegal state in InputParetoBuilder.setConstraints(String)";
+		assert invariant() : "Illegal state in ParetoBuilder.setConstraints(String)";
 		return this;
-
 	}
 
 	/**
@@ -265,7 +226,6 @@ public class ParetoBuilder {
 	public ParetoBuilder setLocale(String desc) {
 		if (desc == null || (desc = desc.trim()).isEmpty())
 			throw new IllegalArgumentException("Illegal 'desc' argument in ParetoBuilder.setLocale(String): " + desc);
-		context.log("> locale: '" + desc + "'");
 		locale = new Locale("en", "US");
 		if ("it".equals(desc))
 			locale = new Locale("it", "IT");
