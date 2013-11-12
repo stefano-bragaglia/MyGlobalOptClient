@@ -36,7 +36,7 @@ public class Objective {
 	private static final String PURE_NUMBER = "Pure Number";
 	private static final String REC = "rec(";
 	private static final String RIC = "ric(";
-	private static final String THERMIC = "thermic";
+	private static final String THERMAL = "thermal";
 	private static final String TERMICA = "termica";
 
 	private boolean max;
@@ -80,7 +80,7 @@ public class Objective {
 			this.kind = Kind.ELECTRIC;
 			desc = desc.substring(0, 1).toUpperCase() + desc.substring(1).toLowerCase();
 			this.unit = "ktoe";
-		} else if (desc.equals(THERMIC) && locale.equals(Helper.ENG) //
+		} else if (desc.equals(THERMAL) && locale.equals(Helper.ENG) //
 				|| desc.equals(TERMICA) && locale.equals(Helper.ITA)) {
 			this.kind = Kind.THERMIC;
 			desc = desc.substring(0, 1).toUpperCase() + desc.substring(1).toLowerCase();

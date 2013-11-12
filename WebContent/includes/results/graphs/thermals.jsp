@@ -1,12 +1,12 @@
-<div id="graphElectrics" class="text-center"
+<div id="graphThermals" class="text-center"
 	style="min-width: 640px; width: 860px; height: 550px; margin: 0 auto"></div>
 
 <script type="text/javascript">
 	$(function() {
-		var titleLang = "Electric energy per source (in ktoe)";
+		var titleLang = "Thermal energy per source (in ktoe)";
 		if ($('#inputLanguage').val() == "it")
-			titleLang = "Energia elettrica per tipologia (in ktoe)";
-		$('#graphElectrics')
+			titleLang = "Energia termica per tipologia (in ktoe)";
+		$('#graphThermals')
 				.highcharts(
 						{
 							chart : {
@@ -19,7 +19,7 @@
 								enabled : false
 							},
 							xAxis : {
-								categories : <%=request.getAttribute("electrics.categories")%>
+								categories : <%=request.getAttribute("thermals.categories")%>
 							},
 							yAxis : {
 								// min: 0,
@@ -47,7 +47,7 @@
 									stacking : 'normal'
 								}
 							},
-							series : <%=request.getAttribute("electrics.series")%>
+							series : <%=request.getAttribute("thermals.series")%>
 						});
 	});
 </script>

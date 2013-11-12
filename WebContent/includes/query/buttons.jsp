@@ -30,7 +30,7 @@
 			functs = functs.split('electric').join('qwerty');
 			functs = functs.split('rec').join('ric');
 			functs = functs.split('qwerty').join('elettrica');
-			functs = functs.split('thermic').join('termica');
+			functs = functs.split('thermal').join('termica');
 		}
 		$('#inputConstraints').val(constrs);
 		$('#inputFunctions').val(functs);

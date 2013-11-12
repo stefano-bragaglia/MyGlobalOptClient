@@ -21,7 +21,7 @@
 			str = str.split('costo').join('cost');
 			str = str.split('elettrica').join('qwerty');
 			str = str.split('ric').join('rec');
-			str = str.split('termica').join('thermic');
+			str = str.split('termica').join('thermal');
 			str = str.split('qwerty').join('electric');
 			// str = str.split('asdfgh').join('cost');
 			str = str.split('zxcvbn').join('electric');
@@ -46,7 +46,7 @@
 			str = str.split('cost').join('costo');
 			str = str.split('electric').join('qwerty');
 			str = str.split('rec').join('ric');
-			str = str.split('thermic').join('termica');
+			str = str.split('thermal').join('termica');
 			str = str.split('qwerty').join('elettrica');
 			str = str.split('asdfgh').join('costo');
 			str = str.split('zxcvbn').join('elettrica');

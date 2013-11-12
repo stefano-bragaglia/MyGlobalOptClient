@@ -1,4 +1,5 @@
 model/service/graphs/AbstractGraph.class
+model/service/graphs/Thermals.class
 model/Wrapper.class
 model/service/Objective$Kind.class
 model/service/Objective.class
@@ -10,6 +11,7 @@ model/Proxy.class
 model/ParetoBuilder.class
 client/Servlet.class
 model/Wrapper$1.class
+model/service/graphs/Electrics.class
 model/InvokeBuilder.class
 model/Solution.class
 model/Wrapper$RComparator.class

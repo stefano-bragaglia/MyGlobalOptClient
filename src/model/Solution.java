@@ -11,7 +11,9 @@ import java.util.Arrays;
 import model.service.Objective;
 import model.service.graphs.Comparison;
 import model.service.graphs.Costs;
+import model.service.graphs.Electrics;
 import model.service.graphs.Graph;
+import model.service.graphs.Thermals;
 
 /**
  * @author stefano
@@ -22,8 +24,12 @@ public class Solution {
 	private String[] boundaries;
 
 	private Graph comparison;
-	
+
 	private Graph costs;
+
+	private Graph electrics;
+	
+	private Graph thermals;
 
 	/**
 	 * The duration of the last computation.
@@ -97,9 +103,9 @@ public class Solution {
 	}
 
 	/**
-	 * Returns the utility for the comparison graph.
+	 * Returns the utility for the costs graph.
 	 * 
-	 * @return the utility for the comparison graph
+	 * @return the utility for the costs graph
 	 */
 	public Graph getCosts() {
 		if (costs == null) {
@@ -108,6 +114,34 @@ public class Solution {
 		}
 		assert invariant() : "Illegal state in Solution.getCosts()";
 		return costs;
+	}
+
+	/**
+	 * Returns the utility for the electrics graph.
+	 * 
+	 * @return the utility for the electrics graph
+	 */
+	public Graph getElectrics() {
+		if (electrics == null) {
+			loadObjectives();
+			electrics = new Electrics(objectives, output.getPlansList());
+		}
+		assert invariant() : "Illegal state in Solution.getElectrics()";
+		return electrics;
+	}
+
+	/**
+	 * Returns the utility for the thermics graph.
+	 * 
+	 * @return the utility for the thermics graph
+	 */
+	public Graph getThermals() {
+		if (thermals == null) {
+			loadObjectives();
+			thermals = new Thermals(objectives, output.getPlansList());
+		}
+		assert invariant() : "Illegal state in Solution.getThermals()";
+		return thermals;
 	}
 
 	/**

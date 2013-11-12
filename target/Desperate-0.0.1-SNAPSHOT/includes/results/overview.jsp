@@ -14,10 +14,10 @@
 			<%@include file="graphs/costs.jsp"%>
 		</div>
 		<div class="tab-pane tab-pane-welled tab-pane-border" id="electric">
-			<p>Howdy, I'm in Section 3.</p>
+			<%@include file="graphs/electrics.jsp"%>
 		</div>
 		<div class="tab-pane tab-pane-welled tab-pane-border" id="thermal">
-			<p>Howdy, I'm in Section 4.</p>
+			<%@include file="graphs/thermals.jsp"%>
 		</div>
 	</div>
 </div>
