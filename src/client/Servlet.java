@@ -68,10 +68,18 @@ public class Servlet extends HttpServlet {
 		computations += 1;
 		session.setAttribute("computations", computations);
 		request.setAttribute("computations", computations);
-		request.setAttribute("dimensions", solution.getDimensions());
 		request.setAttribute("timestamp", solution.getDuration());
 
+//		if (computations < 1000000)
+//			throw new IllegalArgumentException(solution.getCosts().getSeries());
+		
+		request.setAttribute("comparison.categories", solution.getComparison().getCategories());
+		request.setAttribute("comparison.series", solution.getComparison().getSeries());
+		request.setAttribute("costs.categories", solution.getCosts().getNames());
+		request.setAttribute("costs.series", solution.getCosts().getSeries());
+		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/includes/content.jsp");
 		dispatcher.forward(request, response);
+		System.gc();
 	}
 }

@@ -3,9 +3,9 @@
 
 <script type="text/javascript">
 	$(function() {
-		var titleLang = "Costs per source (in EUR)";
+		var titleLang = "Electric energy per source (in ktoe)";
 		if ($('#inputLanguage').val() == "it")
-			titleLang = "Costi per tipologia (in EUR)";
+			titleLang = "Energia elettrica per tipologia (in ktoe)";
 		$('#graphCosts')
 				.highcharts(
 						{
@@ -48,6 +48,6 @@
 								}
 							},
 							series : <%=request.getAttribute("costs.series")%>
-					});
+						});
 	});
 </script>

@@ -48,20 +48,23 @@
 				<li><strong>Constraints:</strong> provide all the appropriate
 					constraints on the domain
 					<ul>
-						<li><small><i>min_max_source(Source, MinValue,
-									MaxValue)</i></small></li>
-						<li><small><i>cost &gt;= electric</i></small></li>
+						<li><small><i><span class="text-success">min_max_source(Source,
+										MinValue, MaxValue)</span></i></small></li>
+						<li><small><i><span class="text-success"
+									id="helpCost">cost</span> &gt;= <span class="text-success"
+									id="helpElectric">electric</span></i> (or similar)</small></li>
 					</ul> where <i>Source</i> is the string for a <i>source</i> (see below)</li>
 				<li><strong>Objective functions:</strong> list one or more
 					objectives to optimise
 					<ul>
-						<li><small><i>max(Term)</i> or <i>min(Term)</i></small></li>
+						<li><small><i><span class="text-success">max(Term)</span></i>
+								or <i><span class="text-success">min(Term)</span></i></small></li>
 					</ul> where <i>Term</i> is either <i>cost</i>, <i>electric</i>, <i>thermal</i>
 					or the key for a <i>receptor</i> (see below)</li>
 				<li><strong>No of scenarios:</strong> tell the amount of
 					desired scenarios to compare</li>
 			</ol>
-			<div class="alert alert-info">
+			<div class="alert alert-warning">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<small><strong>Warning!</strong> No syntax check is
 					performed on the given constraints and objective functions.</small>

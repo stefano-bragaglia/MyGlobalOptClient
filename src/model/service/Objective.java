@@ -3,6 +3,7 @@
  */
 package model.service;
 
+import it.unibo.ai.ePolicy.GlobalOpt.Domain.PrimaryActivity.ActivityType;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.Receptor;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.GlobalOptOutput;
 
@@ -21,6 +22,10 @@ import model.Proxy;
  */
 public class Objective {
 
+	private enum Kind {
+		COST, ELECTRIC, THERMIC, RECEPTOR, UNKNOWN
+	}
+
 	private static final String COST = "cost";
 	private static final String COSTO = "costo";
 	private static final String ELECTRIC = "electric";
@@ -36,11 +41,15 @@ public class Objective {
 
 	private boolean max;
 
-	private Receptor receptor;
-
 	private String name;
 
 	private String unit;
+
+	private Locale locale;
+
+	private String id;
+
+	private Kind kind;
 
 	public Objective(String desc, Locale locale) {
 		if (desc == null || (desc = desc.trim()).isEmpty())
@@ -49,29 +58,35 @@ public class Objective {
 			throw new IllegalArgumentException("Illegal 'desc' argument in Objective(String, Locale): " + desc);
 		if (locale == null)
 			throw new IllegalArgumentException("Illegal 'locale' argument in Objective(String, Locale): " + locale);
+		this.locale = locale;
 		this.max = desc.startsWith(MAX);
-		desc = desc.substring(MAX.length(), desc.length() - 1).trim();
+		this.id = desc = desc.substring(MAX.length(), desc.length() - 1).trim();
 		if ((desc.startsWith(REC) && locale.equals(Helper.ENG) //
 		|| desc.startsWith(RIC) && locale.equals(Helper.ITA)) //
 				&& desc.endsWith(PAR)) {
-			receptor = Receptor.getReceptorByShortName(desc, locale);
+			this.kind = Kind.RECEPTOR;
+			Receptor receptor = Receptor.getReceptorByShortName(desc, locale);
 			if (receptor != null) {
 				desc = receptor.getName();
-				unit = receptor.getMeasurementUnit();
+				this.unit = receptor.getMeasurementUnit();
 			}
 		} else if (desc.equals(COST) && locale.equals(Helper.ENG) //
 				|| desc.equals(COSTO) && locale.equals(Helper.ITA)) {
+			this.kind = Kind.COST;
 			desc = desc.substring(0, 1).toUpperCase() + desc.substring(1).toLowerCase();
-			unit = "EUR";
+			this.unit = "EUR";
 		} else if (desc.equals(ELECTRIC) && locale.equals(Helper.ENG) //
 				|| desc.equals(ELETTRICA) && locale.equals(Helper.ITA)) {
+			this.kind = Kind.ELECTRIC;
 			desc = desc.substring(0, 1).toUpperCase() + desc.substring(1).toLowerCase();
-			unit = "ktoe";
+			this.unit = "ktoe";
 		} else if (desc.equals(THERMIC) && locale.equals(Helper.ENG) //
 				|| desc.equals(TERMICA) && locale.equals(Helper.ITA)) {
+			this.kind = Kind.THERMIC;
 			desc = desc.substring(0, 1).toUpperCase() + desc.substring(1).toLowerCase();
-			unit = "ktoe";
-		}
+			this.unit = "ktoe";
+		} else
+			this.kind = Kind.UNKNOWN;
 		this.name = desc;
 		if (unit == null || unit.equals(PURE_NUMBER))
 			unit = "";
@@ -93,8 +108,9 @@ public class Objective {
 	}
 
 	public String getName() {
+		String result = (max ? "max '" : "min '") + name + "'";
 		assert invariant() : "Illegal state in Objective.getName()";
-		return name;
+		return result;
 	}
 
 	public String getUnit() {
@@ -104,8 +120,35 @@ public class Objective {
 
 	@Override
 	public String toString() {
-		String result = (max ? "max '" : "min '") + name + "'";
 		assert invariant() : "Illegal state in Objective.toString()";
+		return "'" + name + "'";
+	}
+
+	/**
+	 * @param plan
+	 * @return
+	 */
+	public double extract(GlobalOptOutput plan) {
+		if (plan == null)
+			throw new IllegalArgumentException("Illegal 'plan' argument in Objective.extract(GlobalOptOutput): " + plan);
+		double result;
+		switch (kind) {
+		case COST:
+			result = plan.getCosts().getTotal();
+			break;
+		case ELECTRIC:
+			result = plan.getEnergySources().getTotal(ActivityType.ELECTRIC);
+			break;
+		case RECEPTOR:
+			result = plan.getImpacts().computeTotalRecByShortName(id, locale);
+			break;
+		case THERMIC:
+			result = plan.getEnergySources().getTotal(ActivityType.THERMAL);
+			break;
+		default:
+			result = Double.NaN;
+		}
+		assert invariant() : "Illegal state in Objective.extract(GlobalOptOutput)";
 		return result;
 	}
 
@@ -115,8 +158,6 @@ public class Objective {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 		try {
 			Objective o;
 			GlobalOptOutput out;
@@ -138,16 +179,12 @@ public class Objective {
 				i += 1;
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		System.out.println("Done.");
 	}
 }

@@ -26,7 +26,11 @@
 			jQuery.each(sources, function(eng, ita) {
 				constrs = constrs.split(eng).join(ita);
 			});
-			functs = functs.split('rec(').join('ric(');
+			functs = functs.split('cost').join('costo');
+			functs = functs.split('electric').join('qwerty');
+			functs = functs.split('rec').join('ric');
+			functs = functs.split('qwerty').join('elettrica');
+			functs = functs.split('thermic').join('termica');
 		}
 		$('#inputConstraints').val(constrs);
 		$('#inputFunctions').val(functs);
