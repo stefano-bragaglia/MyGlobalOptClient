@@ -28,6 +28,10 @@
 							available</a></li>
 				</ul>
 			</div>
+			<div class="text-right">
+				<a href="#" onclick="repeat()" class="btn btn-info push"
+					data-toggle="tab">New query <i class="icon-repeat"></i></a>
+			</div>
 			<!--/.well -->
 		</div>
 		<!--/span-->
@@ -74,12 +78,6 @@
 							least one to see the results and the scenarios computed for the
 							last query.</p>
 					</div>
-				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="offset10 span2 text-right">
-					<a href="#" onclick="repeat()" class="btn btn-info push"
-						data-toggle="tab">New query <i class="icon-repeat"></i></a>
 				</div>
 			</div>
 		</div>

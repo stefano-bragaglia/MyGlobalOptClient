@@ -276,10 +276,16 @@ public class Solution {
 		return objectives;
 	}
 
-	public int size() {
+	public int dimensions() {
 		loadObjectives();
-		assert invariant() : "Illegal state in Solution.size()";
+		assert invariant() : "Illegal state in Solution.dimensions()";
 		return objectives.length;
+	}
+	
+	public int scenarios() {
+		loadScenarios();
+		assert invariant() : "Illegal state in Solution.scenarios()";
+		return scenarios.length;		
 	}
 
 }

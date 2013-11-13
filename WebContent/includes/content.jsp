@@ -6,7 +6,8 @@
 				<li class="nav-header">Scenarios comparison</li>
 				<li class="active"><a href="#overview" data-toggle="tab">General
 						overview</a></li>
-				<li><a href="#objectives" data-toggle="tab">Objective functions</a></li>
+				<li><a href="#objectives" data-toggle="tab">Objective
+						functions</a></li>
 				<li><a href="#emissions" data-toggle="tab">Emissions and
 						pollutants</a></li>
 				<!--li><a href="#costs" data-toggle="tab">Costs summary</a></li-->
@@ -22,6 +23,16 @@
 				<li><a href="#scenario8" data-toggle="tab">8. Scenario</a></li>
 			</ul>
 		</div>
+		<div class="text-right">
+			<p>
+				<small><span class="muted">Computing the
+					scenarios took <strong class="text-info">${timestamp}</strong>.<br />
+					<strong class="text-info">${computations} query/ies</strong> answered in this session.</span></small>
+			</p>
+			<a href="#" onclick="repeat()" class="btn btn-info push"
+				data-toggle="tab">New query <i class="icon-repeat"></i></a>
+		</div>
+		
 		<!--/.well -->
 	</div>
 	<!--/span-->
@@ -103,21 +114,6 @@
 					<h4>Scenario n.</h4>
 					<%@include file="results/scenario.jsp"%>
 				</div>
-			</div>
-		</div>
-		<div class="row-fluid">
-			<div class="span10">
-				<p class="muted text-right">
-					<small>The service has been queried <strong
-						class="text-info">${computations} time(s)</strong> during this
-						working session.<br /> The computations of the above scenarios
-						took <strong class="text-info">${timestamp}</strong>.
-					</small>
-				</p>
-			</div>
-			<div class="span2 text-right">
-				<a href="#" onclick="repeat()" class="btn btn-info push"
-					data-toggle="tab">New query <i class="icon-repeat"></i></a>
 			</div>
 		</div>
 	</div>

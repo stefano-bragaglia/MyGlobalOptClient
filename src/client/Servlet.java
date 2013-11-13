@@ -79,7 +79,7 @@ public class Servlet extends HttpServlet {
 		request.setAttribute("thermals.series", solution.getThermals().getSeries());
 
 		request.setAttribute("objectives", solution.objectives());
-		for (int o = 0; o < solution.size(); o++)
+		for (int o = 0; o < solution.dimensions(); o++)
 			request.setAttribute("function" + (o + 1) + ".series", solution.getFunction(o).getSeries());
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/includes/content.jsp");
