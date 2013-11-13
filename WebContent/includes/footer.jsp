@@ -1,4 +1,4 @@
-<%@page import="model.Wrapper"%>
+<%@page import="globalopt.ws.model.Wrapper"%>
 <div id="footer">
 	<div class="container">
 		<hr />

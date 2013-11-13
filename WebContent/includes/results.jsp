@@ -1,4 +1,4 @@
-<%@ page import="model.Wrapper"%>
+<%@ page import="globalopt.ws.model.Wrapper"%>
 <script type="text/javascript">
 	function repeat() {
 		$('#navtabResults').removeClass('active');

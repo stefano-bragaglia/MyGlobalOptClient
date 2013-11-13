@@ -1,5 +1,5 @@
 <%@ page import="java.util.Locale" %>
-<%@ page import="model.Wrapper" %>
+<%@ page import="globalopt.ws.model.Wrapper" %>
 <script type="text/javascript"> 
 	function checkLanguage() {
 		<% out.println(Wrapper.MAP_ENG_ITA); %>

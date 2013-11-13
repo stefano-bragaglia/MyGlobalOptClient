@@ -1,4 +1,4 @@
-<%@ page import="model.Wrapper"%>
+<%@ page import="globalopt.ws.model.Wrapper"%>
 <script type="text/javascript">
 	function check() {
 		var res1 = checkLanguage();
