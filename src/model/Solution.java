@@ -12,6 +12,7 @@ import model.service.Objective;
 import model.service.graphs.Comparison;
 import model.service.graphs.Costs;
 import model.service.graphs.Electrics;
+import model.service.graphs.Functions;
 import model.service.graphs.Graph;
 import model.service.graphs.Thermals;
 
@@ -27,14 +28,14 @@ public class Solution {
 
 	private Graph costs;
 
-	private Graph electrics;
-	
-	private Graph thermals;
-
 	/**
 	 * The duration of the last computation.
 	 */
 	private String duration;
+
+	private Graph electrics;
+
+	private Graph[] functions;
 
 	/**
 	 * 
@@ -52,6 +53,8 @@ public class Solution {
 	private GOParetoInputParam params;
 
 	private String[] scenarios;
+
+	private Graph thermals;
 
 	/**
 	 * The computing time of the query.
@@ -117,34 +120,6 @@ public class Solution {
 	}
 
 	/**
-	 * Returns the utility for the electrics graph.
-	 * 
-	 * @return the utility for the electrics graph
-	 */
-	public Graph getElectrics() {
-		if (electrics == null) {
-			loadObjectives();
-			electrics = new Electrics(objectives, output.getPlansList());
-		}
-		assert invariant() : "Illegal state in Solution.getElectrics()";
-		return electrics;
-	}
-
-	/**
-	 * Returns the utility for the thermics graph.
-	 * 
-	 * @return the utility for the thermics graph
-	 */
-	public Graph getThermals() {
-		if (thermals == null) {
-			loadObjectives();
-			thermals = new Thermals(objectives, output.getPlansList());
-		}
-		assert invariant() : "Illegal state in Solution.getThermals()";
-		return thermals;
-	}
-
-	/**
 	 * @return
 	 */
 	public String getDimensions() {
@@ -176,10 +151,50 @@ public class Solution {
 		return duration;
 	}
 
+	/**
+	 * Returns the utility for the electrics graph.
+	 * 
+	 * @return the utility for the electrics graph
+	 */
+	public Graph getElectrics() {
+		if (electrics == null) {
+			loadObjectives();
+			electrics = new Electrics(objectives, output.getPlansList());
+		}
+		assert invariant() : "Illegal state in Solution.getElectrics()";
+		return electrics;
+	}
+
+	public Graph getFunction(int index) {
+		loadObjectives();
+		if (index < 0 || index >= objectives.length)
+			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getFunction(int):" + index);
+		if (functions == null)
+			functions = new Graph[objectives.length];
+		if (functions[index] == null)
+			functions[index] = new Functions(objectives, index, output.getPlansList());
+		assert invariant() : "Illegal state in Solution.getFunction(int)";
+		return functions[index];
+	}
+
 	public String getScenarios() {
 		loadScenarios();
 		assert invariant() : "Illegal state in Solution.getScenarios()";
 		return Arrays.toString(scenarios);
+	}
+
+	/**
+	 * Returns the utility for the thermics graph.
+	 * 
+	 * @return the utility for the thermics graph
+	 */
+	public Graph getThermals() {
+		if (thermals == null) {
+			loadObjectives();
+			thermals = new Thermals(objectives, output.getPlansList());
+		}
+		assert invariant() : "Illegal state in Solution.getThermals()";
+		return thermals;
 	}
 
 	/**
@@ -250,6 +265,21 @@ public class Solution {
 				transitionals[i] = (i + b) + ". Scenario";
 		}
 		assert invariant() : "Illegal state in Solution.loadTransitionals()";
+	}
+
+	/**
+	 * @return
+	 */
+	public Objective[] objectives() {
+		loadObjectives();
+		assert invariant() : "Illegal state in Solution.objectives()";
+		return objectives;
+	}
+
+	public int size() {
+		loadObjectives();
+		assert invariant() : "Illegal state in Solution.size()";
+		return objectives.length;
 	}
 
 }

@@ -6,8 +6,7 @@
 				<li class="nav-header">Scenarios comparison</li>
 				<li class="active"><a href="#overview" data-toggle="tab">General
 						overview</a></li>
-				<li><a href="#objectives" data-toggle="tab">Objectives
-						comparison</a></li>
+				<li><a href="#objectives" data-toggle="tab">Objective functions</a></li>
 				<li><a href="#emissions" data-toggle="tab">Emissions and
 						pollutants</a></li>
 				<!--li><a href="#costs" data-toggle="tab">Costs summary</a></li-->
@@ -37,8 +36,8 @@
 
 			<div class="tab-pane" id="objectives">
 				<div class="well">
-					<h4>Objectives comparison</h4>
-					<%@include file="results/overview.jsp"%>
+					<h4>Objective functions</h4>
+					<%@include file="results/functions.jsp"%>
 				</div>
 			</div>
 

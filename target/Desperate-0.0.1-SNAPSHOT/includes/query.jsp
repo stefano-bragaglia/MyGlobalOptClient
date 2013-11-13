@@ -50,24 +50,34 @@
 					<ul>
 						<li><small><i><span class="text-success">min_max_source(Source,
 										MinValue, MaxValue)</span></i></small></li>
-						<li><small><i><span class="text-success"
-									id="helpCost">cost</span> &gt;= <span class="text-success"
-									id="helpElectric">electric</span></i> (or similar)</small></li>
-					</ul> where <i>Source</i> is the string for a <i>source</i> (see below)</li>
+						<li><small>
+							<i><span class="text-success" id="helpCost1">cost</span> <span class="text-success">&gt;=</span> 
+							   <span class="text-success" id="helpElectric1">electric</span></i> 
+							   (or similar)</small></li>
+					</ul> <small>where <i>Source</i> is the key for a <span class="text-info">source</span>
+						(see the references below), 
+						<i><span class="text-success" id="helpCost2">cost</span></i>,
+						<i><span class="text-success" id="helpElectric2">electric</span></i>
+						or <i><span class="text-success" id="helpThermal2">thermal</span></i></small>
+				</li>
 				<li><strong>Objective functions:</strong> list one or more
 					objectives to optimise
 					<ul>
 						<li><small><i><span class="text-success">max(Term)</span></i>
 								or <i><span class="text-success">min(Term)</span></i></small></li>
-					</ul> where <i>Term</i> is either <i>cost</i>, <i>electric</i>, <i>thermal</i>
-					or the key for a <i>receptor</i> (see below)</li>
+					</ul> <small>where <i>Term</i> is either <i><span
+							class="text-success" id="helpCost3">cost</span></i>, <i><span
+							class="text-success" id="helpElectric3">electric</span></i>, <i><span
+							class="text-success" id="helpThermal3">thermal</span></i> or the key
+						for a <span class="text-info">receptor</span> (see the references below)</li>
+				</small>
 				<li><strong>No of scenarios:</strong> tell the amount of
 					desired scenarios to compare</li>
 			</ol>
 			<div class="alert alert-warning">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
-				<small><strong>Warning!</strong> No syntax check is
-					performed on the given constraints and objective functions.</small>
+				<small><strong>Warning!</strong> No syntax or semantic check
+					is performed on constraints and objective functions.</small>
 			</div>
 			<hr />
 			<p class="lead">References</p>

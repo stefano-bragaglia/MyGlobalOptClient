@@ -6,27 +6,12 @@
 		var titleLang = "Electric energy per source (in ktoe)";
 		if ($('#inputLanguage').val() == "it")
 			titleLang = "Energia elettrica per tipologia (in ktoe)";
-		$('#graphElectrics')
-				.highcharts(
-						{
-							chart : {
-								type : 'bar'
-							},
-							title : {
-								text : ''
-							},
-							credits : {
-								enabled : false
-							},
-							xAxis : {
-								categories : <%=request.getAttribute("electrics.categories")%>
-							},
-							yAxis : {
-								// min: 0,
-								title : {
-									text : titleLang
-								}
-							},
+		$('#graphElectrics').highcharts( {
+							chart : { type : 'bar' },
+							title : { text : '' },
+							credits : { enabled : false },
+							xAxis : { categories : <%=request.getAttribute("categories")%> },
+							yAxis : { title : { text : titleLang } },
 							tooltip : {
 								shared : true,
 								useHTML : true,
@@ -38,15 +23,8 @@
 								footerFormat : '</table>',
 								valueDecimals : 2
 							},
-							legend : {
-								backgroundColor : '#FFFFFF',
-								reversed : true
-							},
-							plotOptions : {
-								series : {
-									stacking : 'normal'
-								}
-							},
+							legend : { backgroundColor : '#FFFFFF', reversed : true },
+							plotOptions : { series : { stacking : 'normal' } },
 							series : <%=request.getAttribute("electrics.series")%>
 						});
 	});

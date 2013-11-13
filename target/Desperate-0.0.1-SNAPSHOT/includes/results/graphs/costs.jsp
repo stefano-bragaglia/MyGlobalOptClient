@@ -6,27 +6,12 @@
 		var titleLang = "Costs per source (in EUR)";
 		if ($('#inputLanguage').val() == "it")
 			titleLang = "Costi per tipologia (in EUR)";
-		$('#graphCosts')
-				.highcharts(
-						{
-							chart : {
-								type : 'bar'
-							},
-							title : {
-								text : ''
-							},
-							credits : {
-								enabled : false
-							},
-							xAxis : {
-								categories : <%=request.getAttribute("costs.categories")%>
-							},
-							yAxis : {
-								// min: 0,
-								title : {
-									text : titleLang
-								}
-							},
+		$('#graphCosts').highcharts( {
+							chart : { type : 'bar' },
+							title : { text : '' },
+							credits : { enabled : false },
+							xAxis : { categories : <%=request.getAttribute("categories")%> },
+							yAxis : { title : { text : titleLang } },
 							tooltip : {
 								shared : true,
 								useHTML : true,
@@ -38,15 +23,8 @@
 								footerFormat : '</table>',
 								valueDecimals : 2
 							},
-							legend : {
-								backgroundColor : '#FFFFFF',
-								reversed : true
-							},
-							plotOptions : {
-								series : {
-									stacking : 'normal'
-								}
-							},
+							legend : { backgroundColor : '#FFFFFF', reversed : true },
+							plotOptions : { series : { stacking : 'normal' } },
 							series : <%=request.getAttribute("costs.series")%>
 					});
 	});

@@ -1,3 +1,4 @@
+model/service/graphs/Functions$1.class
 model/service/graphs/AbstractGraph.class
 model/service/graphs/Thermals.class
 model/Wrapper.class
@@ -17,3 +18,4 @@ model/Solution.class
 model/Wrapper$RComparator.class
 model/service/graphs/Comparison.class
 model/Helper.class
+model/service/graphs/Functions.class

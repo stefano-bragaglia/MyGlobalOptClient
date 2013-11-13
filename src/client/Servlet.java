@@ -60,28 +60,28 @@ public class Servlet extends HttpServlet {
 
 		Solution solution = Helper.compute(builder);
 
-		// InvokeBuilder min =
-		// problem.minimize(Receptor.getReceptorList(problem.getLocale())[0]);
-		// InvokeBuilder max =
-		// problem.maximize(Receptor.getReceptorList(problem.getLocale())[0]);
+		// InvokeBuilder min = problem.minimize(Receptor.getReceptorList(problem.getLocale())[0]);
+		// InvokeBuilder max = problem.maximize(Receptor.getReceptorList(problem.getLocale())[0]);
 
 		computations += 1;
 		session.setAttribute("computations", computations);
 		request.setAttribute("computations", computations);
 		request.setAttribute("timestamp", solution.getDuration());
 
-//		if (computations < 1000000)
-//			throw new IllegalArgumentException("" + solution.getElectrics().getSeries());
-		
+		// if (computations < 1000000)
+		// 	throw new IllegalArgumentException("" + Arrays.toString(solution.objectives()));
+
 		request.setAttribute("comparison.categories", solution.getComparison().getCategories());
 		request.setAttribute("comparison.series", solution.getComparison().getSeries());
-		request.setAttribute("costs.categories", solution.getCosts().getNames());
+		request.setAttribute("categories", solution.getCosts().getNames());
 		request.setAttribute("costs.series", solution.getCosts().getSeries());
-		request.setAttribute("electrics.categories", solution.getElectrics().getNames());
 		request.setAttribute("electrics.series", solution.getElectrics().getSeries());
-		request.setAttribute("thermals.categories", solution.getThermals().getNames());
 		request.setAttribute("thermals.series", solution.getThermals().getSeries());
-		
+
+		request.setAttribute("objectives", solution.objectives());
+		for (int o = 0; o < solution.size(); o++)
+			request.setAttribute("function" + (o + 1) + ".series", solution.getFunction(o).getSeries());
+
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/includes/content.jsp");
 		dispatcher.forward(request, response);
 		System.gc();

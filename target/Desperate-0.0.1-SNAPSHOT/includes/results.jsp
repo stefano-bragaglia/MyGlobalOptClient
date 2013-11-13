@@ -16,15 +16,14 @@
 					<li class="nav-header">Scenarios comparison</li>
 					<li class="active"><a href="#overview" data-toggle="tab">General
 							overview</a></li>
-					<li><a href="#objectives" data-toggle="tab">Objectives
-							comparison</a></li>
+					<li><a href="#objectives" data-toggle="tab">Objective
+							functions</a></li>
 					<li><a href="#emissions" data-toggle="tab">Emissions and
 							pollutants</a></li>
-					<!--li><a href="#costs" data-toggle="tab">Costs summary</a></li-->
 					<li class="nav-header">Boundary scenarios</li>
 					<li><a href="#scenario" data-toggle="tab">No scenario yet
 							available</a></li>
-					<li class="nav-header">Transitional scenarios</li>
+					<li class="nav-header">Intermediate scenarios</li>
 					<li><a href="#scenario" data-toggle="tab">No scenario yet
 							available</a></li>
 				</ul>
@@ -47,7 +46,7 @@
 
 				<div class="tab-pane" id="objectives">
 					<div class="well">
-						<h4>Objectives comparison</h4>
+						<h4>Objective functions</h4>
 						<hr />
 						<p>At the moment, no query has been carried out yet.</p>
 						<p>Please return to this page after you have requested at
