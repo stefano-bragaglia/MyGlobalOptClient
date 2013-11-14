@@ -3,9 +3,9 @@
 
 <script type="text/javascript">
 	$(function() {
-		var titleLang = "Costs per source (in EUR)";
+		var titleLang = "Costs per source (in Eur)";
 		if ($('#inputLanguage').val() == "it")
-			titleLang = "Costi per tipologia (in EUR)";
+			titleLang = "Costi per tipologia (in Eur)";
 		$('#graphCosts').highcharts( {
 							chart : { type : 'bar' },
 							title : { text : '' },

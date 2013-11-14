@@ -8,6 +8,7 @@
 	<ul class="nav nav-tabs nav-tabs-border">
 		<li class="active"><a href="#receptors<%=index%>" data-toggle="tab">Receptors</a></li>
 		<li><a href="#sources<%=index%>" data-toggle="tab">Energy Sources</a></li>
+		<li><a href="#actions<%=index%>" data-toggle="tab">Costs per Action</a></li>
 		<li><a href="#costs<%=index%>" data-toggle="tab">Detailed Costs</a></li>
 		<li><a href="#emit<%=index%>" data-toggle="tab">Emissions and Pollutants</a></li>
 	</ul>
@@ -18,8 +19,11 @@
 		<div class="tab-pane tab-pane-welled tab-pane-border" id="sources<%=index%>">		
 			<%=solution.getTableSources(index)%>
 		</div>
+		<div class="tab-pane tab-pane-welled tab-pane-border" id="actions<%=index%>">
+			<%=solution.getTableActions(index)%>
+		</div>
 		<div class="tab-pane tab-pane-welled tab-pane-border" id="costs<%=index%>">
-			<p>Howdy, I'm in Section 3.</p>
+			<%=solution.getTableCosts(index)%>
 		</div>
 		<div class="tab-pane tab-pane-welled tab-pane-border" id="emit<%=index%>">
 			<%=solution.getTableEmissions(index)%>

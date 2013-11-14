@@ -11,12 +11,15 @@ import globalopt.ws.model.service.graphs.Functions;
 import globalopt.ws.model.service.graphs.Graph;
 import globalopt.ws.model.service.graphs.Thermals;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.Emission;
+import it.unibo.ai.ePolicy.GlobalOpt.IO.GlobalOptMultipleValue;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.GlobalOptSingleValue;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Input.GOParetoInputParam;
+import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.DetailedCosts;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.EmittedEmissions;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.EnergyAssignments;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.GOParetoOutput;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.GlobalOptOutput;
+import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.TotalCosts;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -314,7 +317,7 @@ public class Solution {
 		if (scenarios == null)
 			scenarios = output.getPlansList();
 		if (index < 0 || index >= scenarios.length)
-			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getSourcesTable(int): "
+			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getTableSources(int): "
 					+ index);
 		boolean head = false;
 		String sign = "tableSources";
@@ -331,7 +334,8 @@ public class Solution {
 			for (String key : map.keySet()) {
 				single = map.get(key);
 				if (!head) {
-					result += String.format("<thead>\n<tr><th>%s</th><th>%s</th></tr>\n</thead>\n<tbody>\n",
+					result += String.format(
+							"<thead>\n<tr><th>%s</th><th colspan=\"2\">%s</th></tr>\n</thead>\n<tbody>\n",
 							assignments.getEnergySourceLabel(), assignments.getInstalledPowerLabel());
 					head = true;
 				}
@@ -343,9 +347,9 @@ public class Solution {
 					if (unit == null)
 						unit = "";
 				}
-				result += String.format(
-						"<tr><td>%s</td><td class=\"text-right\">%,.2f <small class=\"muted\">%s</small></td></tr>\n",
-						key, value, unit);
+				result += String
+						.format("<tr><td>%s</td><td class=\"text-right\">%,.2f</td><td><small class=\"muted\">%s</small></td></tr>\n",
+								key, value, unit);
 			}
 		}
 		result += "</tbody>\n</table>\n</div>\n";
@@ -361,7 +365,7 @@ public class Solution {
 		if (scenarios == null)
 			scenarios = output.getPlansList();
 		if (index < 0 || index >= scenarios.length)
-			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getSourcesTable(int): "
+			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getTableEmissions(int): "
 					+ index);
 		boolean head = false;
 		String sign = "tableEmissions";
@@ -380,8 +384,9 @@ public class Solution {
 				value = Double.NaN;
 				single = map.get(key);
 				if (!head) {
-					result += String.format("<thead>\n<tr><th>%s</th><th>%s</th></tr>\n</thead>\n<tbody>\n",
-							emitted.getPollutantLabel(), emitted.getQuantityLabel());
+					result += String.format("<thead>\n<tr><th>%s</th><th>%s</th><th>%s</th></tr>\n</thead>\n<tbody>\n",
+							emitted.getPollutantLabel(), emitted.getQuantityLabel(), scenarios[index].getDetailed()
+									.getQuantityUnitLabel());
 					head = true;
 				}
 				if (single != null) {
@@ -393,12 +398,160 @@ public class Solution {
 						unit = "";
 				}
 				result += String
-						.format("<tr><td>%s <small class=\"muted\">(%s)</small></td><td class=\"text-right\">%,.2f <small class=\"muted\">%s</small></td></tr>\n", //
+						.format("<tr><td>%s <small class=\"muted\">(%s)</small></td><td class=\"text-right\">%,.2f</td><td><small class=\"muted\">%s</small></td></tr>\n", //
 								Emission.getEmissionByShortName(key, locale).getName(), key, value, unit);
 			}
 		}
 		result += "</tbody>\n</table>\n</div>\n";
 		assert invariant() : "Illegal state in Solution.getTableEmissions(int)";
+		return result;
+	}
+
+	/**
+	 * @param index
+	 * @return
+	 */
+	public String getTableCosts(int index) {
+		if (scenarios == null)
+			scenarios = output.getPlansList();
+		if (index < 0 || index >= scenarios.length)
+			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getTableCosts(int): " + index);
+		boolean head = false;
+		String sign = "tableCosts";
+		String result;
+		result = String.format("<script type=\"text/javascript\">$(function() { tablesort($('#%s%d')); });</script>\n",
+				sign, index);
+		result += String.format("<div class=\"text-center\"><table id=\"%s%d\" class=\"tablesorter\">", sign, index);
+		DetailedCosts detailed = scenarios[index].getDetailed();
+		Map<String, GlobalOptMultipleValue> map = detailed.getTheDetailedCosts();
+		if (map != null) {
+			String unitCost = "";
+			String unitQuantity = "";
+			Double cost = Double.NaN;
+			Double quantity = Double.NaN;
+			GlobalOptSingleValue single;
+			GlobalOptMultipleValue multiple;
+			for (String key : map.keySet()) {
+				multiple = map.get(key);
+				if (!head) {
+					result += String
+							.format("<thead>\n<tr><th>%s</th><th>%s</th><th>%s</th><th colspan=\"2\">%s</th></tr>\n</thead>\n<tbody>\n",
+									detailed.getActionTypeLabel(), detailed.getQuantityLabel(),
+									detailed.getQuantityUnitLabel(), detailed.getActionCostLabel());
+					head = true;
+				}
+				if (multiple != null) {
+					Map<String, GlobalOptSingleValue> smap = multiple.getValues();
+					if (smap != null) {
+						single = smap.get(detailed.getQuantityLabel());
+						if (single != null) {
+							quantity = single.getValue();
+							unitQuantity = single.getMeasurementUnit();
+							if (quantity == null)
+								quantity = Double.NaN;
+							if (unitQuantity == null)
+								unitQuantity = "";
+						}
+						single = smap.get(detailed.getActionCostLabel());
+						if (single != null) {
+							cost = single.getValue();
+							unitCost = single.getMeasurementUnit();
+							if (cost == null)
+								cost = Double.NaN;
+							if (unitCost == null)
+								unitCost = "";
+						}
+						result += String
+								.format("<tr><td>%s</td><td class=\"text-right\">%,.2f</td><td><small class=\"muted\">%s</small></td><td class=\"text-right\">%,.2f</td><td><small class=\"muted\">%s</small></td></tr>\n", //
+										key, quantity, unitQuantity, cost, unitCost);
+					}
+				}
+			}
+		}
+		result += "</tbody>\n</table>\n</div>\n";
+		assert invariant() : "Illegal state in Solution.getTableCosts(int)";
+		return result;
+	}
+
+	/**
+	 * @param index
+	 * @return
+	 */
+	public String getTableActions(int index) {
+		if (scenarios == null)
+			scenarios = output.getPlansList();
+		if (index < 0 || index >= scenarios.length)
+			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getTableActions(int): " + index);
+		boolean head = false;
+		String sign = "tableActions";
+		String result;
+		result = String.format("<script type=\"text/javascript\">$(function() { tablesort($('#%s%d')); });</script>\n",
+				sign, index);
+		result += String.format("<div class=\"text-center\"><table id=\"%s%d\" class=\"tablesorter\">", sign, index);
+		TotalCosts costs = scenarios[index].getCosts();
+		String pricost = "Primary Works";
+		String seccost = "Secondary Works";
+		if (Helper.ITA.equals(scenarios[index].getMylocale())) {
+			pricost = costs.getPrimaryWorksCostLabel();
+			seccost = costs.getSecondaryWorksLabel();
+		}
+		Map<String, GlobalOptMultipleValue> map = costs.getCosts();
+		if (map != null) {
+			String unitPrimary = "";
+			String unitSecondary = "";
+			String unitQuantity = "";
+			Double primary = Double.NaN;
+			Double secondary = Double.NaN;
+			Double quantity = Double.NaN;
+			GlobalOptSingleValue single;
+			GlobalOptMultipleValue multiple;
+			for (String key : map.keySet()) {
+				multiple = map.get(key);
+				if (!head) {
+					result += String
+							.format("<thead>\n<tr><th>%s</th><th>%s</th><th>%s</th><th colspan=\"2\">%s</th><th colspan=\"2\">%s</th>\n</thead>\n<tbody>\n",
+									costs.getEnergySourceTypeLabel(), costs.getQuantityLabel(), costs.getQuantityUnitLabel(), pricost, seccost);
+					head = true;
+				}
+				if (multiple != null) {
+					Map<String, GlobalOptSingleValue> smap = multiple.getValues();
+					if (smap != null) {
+						single = smap.get(costs.getQuantityLabel());
+						if (single != null) {
+							quantity = single.getValue();
+							unitQuantity = single.getMeasurementUnit();
+							if (quantity == null)
+								quantity = Double.NaN;
+							if (unitQuantity == null)
+								unitQuantity = "";
+						}
+						single = smap.get(costs.getPrimaryWorksCostLabel());
+						if (single != null) {
+							primary = single.getValue();
+							unitPrimary = single.getMeasurementUnit();
+							if (primary == null)
+								primary = Double.NaN;
+							if (unitPrimary == null)
+								unitPrimary = "";
+						}
+						single = smap.get(costs.getSecondaryWorksLabel());
+						if (single != null) {
+							secondary = single.getValue();
+							unitSecondary = single.getMeasurementUnit();
+							if (secondary == null)
+								secondary = Double.NaN;
+							if (unitSecondary == null)
+								unitSecondary = "";
+						}
+						result += String
+								.format("<tr><td>%s</td><td class=\"text-right\">%,.2f</td><td><small class=\"muted\">%s</small></td><td class=\"text-right\">%,.2f</td><td><small class=\"muted\">%s</small></td><td class=\"text-right\">%,.2f</td><td><small class=\"muted\">%s</small></td></tr>\n", //
+										key, quantity, unitQuantity, primary, unitPrimary, secondary, unitSecondary);
+					}
+				}
+			}
+		}
+		result += "</tbody>\n</table>\n</div>\n";
+		assert invariant() : "Illegal state in Solution.getTableActions(int)";
 		return result;
 	}
 

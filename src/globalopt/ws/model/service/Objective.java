@@ -116,7 +116,7 @@ public class Objective {
 				|| desc.equals(COSTO) && locale.equals(Helper.ITA)) {
 			this.kind = Kind.COST;
 			desc = desc.substring(0, 1).toUpperCase() + desc.substring(1).toLowerCase();
-			this.unit = "EUR";
+			this.unit = "Eur";
 		} else if (desc.equals(ELECTRIC) && locale.equals(Helper.ENG) //
 				|| desc.equals(ELETTRICA) && locale.equals(Helper.ITA)) {
 			this.kind = Kind.ELECTRIC;
