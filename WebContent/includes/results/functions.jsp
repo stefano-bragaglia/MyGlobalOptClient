@@ -1,4 +1,4 @@
-<%@page import="model.service.Objective"%>
+<%@page import="globalopt.ws.model.service.Objective"%>
 <%!Objective[] objectives = null;%>
 <div class="tabbable">
 	<ul class="nav nav-tabs nav-tabs-border">

@@ -7,7 +7,7 @@
 			<div class="well">
 				<!-- p>Form section.</p -->
 				<form class="form-horizontal" method="post">
-					<!-- action="/Desperate/servlet"-->
+					
 					<fieldset>
 						<legend>Energy Scenario Evaluation</legend>
 						<%@include file="query/language.jsp"%>
@@ -65,12 +65,12 @@
 					<ul>
 						<li><small><i><span class="text-success">max(Term)</span></i>
 								or <i><span class="text-success">min(Term)</span></i></small></li>
-					</ul> <small>where <i>Term</i> is either <i><span
+					</ul><small>where <i>Term</i> is either <i><span
 							class="text-success" id="helpCost3">cost</span></i>, <i><span
 							class="text-success" id="helpElectric3">electric</span></i>, <i><span
 							class="text-success" id="helpThermal3">thermal</span></i> or the key
-						for a <span class="text-info">receptor</span> (see the references below)</li>
-				</small>
+						for a <span class="text-info">receptor</span> (see the references below)</small></li>
+				
 				<li><strong>No of scenarios:</strong> tell the amount of
 					desired scenarios to compare</li>
 			</ol>

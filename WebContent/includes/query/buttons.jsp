@@ -41,7 +41,7 @@
 		// alert('Message: ' + $("#inputLanguage").val());
 		if (check()) {
 			$('#modalProgress').modal('show');
-			$.post("/Desperate/servlet", {
+			$.post("/Pareto/servlet", {
 				locale : $("#inputLanguage").val(),
 				constraints : $("#inputConstraints").val(),
 				functions : $("#inputFunctions").val(),

@@ -35,7 +35,14 @@ public class Proxy implements GlobalOptWSSEI {
 	/**
 	 * The URI where the Global Optimiser service is deployed.
 	 */
-	private static final String URI = "http://localhost:8080/GlobalOptWS/services/GlobalOpt";
+	private static final String URI = "http://globalopt.epolicy-project.eu/GlobalOptWS/services/GlobalOpt";
+	// "http://localhost:8080/GlobalOptWS/services/GlobalOpt";
+
+	/**
+	 * The WSDL where the Global Optimiser service is deployed.
+	 */
+	private static final String WSDL = "http://globalopt.epolicy-project.eu/GlobalOptWS/services/GlobalOpt/?wsdl";
+	// "http://localhost:8080/GlobalOptWS/services/GlobalOpt/?wsdl";
 
 	/**
 	 * The proxy for the Global Optimiser service.
@@ -66,12 +73,15 @@ public class Proxy implements GlobalOptWSSEI {
 	private Proxy() throws MalformedURLException {
 		QName nameService = new QName(NAMESPACE, "GlobalOpt");
 		QName namePort = new QName(NAMESPACE, "GlobalOptSimpleWSSEIPort");
-		Service service = Service.create(new URL(URI + "/?wsdl"), nameService);
+		Service service = Service.create(new URL(WSDL), nameService);
 		service.addPort(namePort, SOAPBinding.SOAP11HTTP_BINDING, URI);
 		proxy = service.getPort(GlobalOptWSSEI.class);
 		Client client = ClientProxy.getClient(proxy);
 		HTTPConduit httpConduit = (HTTPConduit) client.getConduit();
 		httpConduit.getClient().setReceiveTimeout(1000 * 60 * 30);
+		System.out.println(">> Service: " + nameService);
+		System.out.println(">> Port:    " + namePort);
+		System.out.println(">> URL:     " + new URL(WSDL));
 		assert invariant() : "Illegal state in Proxy()";
 	}
 
