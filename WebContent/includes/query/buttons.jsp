@@ -1,3 +1,4 @@
+<%@ page import="globalopt.ws.model.Connector"%>
 <%@ page import="globalopt.ws.model.Wrapper"%>
 <script type="text/javascript">
 	function check() {
@@ -41,7 +42,7 @@
 		// alert('Message: ' + $("#inputLanguage").val());
 		if (check()) {
 			$('#modalProgress').modal('show');
-			$.post("/Pareto/servlet", {
+			$.post(<%="'" + Connector.POST + "'"%>, {
 				locale : $("#inputLanguage").val(),
 				constraints : $("#inputConstraints").val(),
 				functions : $("#inputFunctions").val(),

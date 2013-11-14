@@ -3,9 +3,9 @@
 
 <script type="text/javascript">
 	$(function() {
-		var titleLang = "Thermal energy per source (in ktoe)";
+		var titleLang = "Thermal energy per source (in kTOE)";
 		if ($('#inputLanguage').val() == "it")
-			titleLang = "Energia termica per tipologia (in ktoe)";
+			titleLang = "Energia termica per tipologia (in kTOE)";
 		$('#graphThermals').highcharts( {
 				chart : { type : 'bar' },
 				title : { text : '' },

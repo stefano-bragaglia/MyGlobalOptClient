@@ -28,23 +28,6 @@ import org.apache.cxf.transport.http.HTTPConduit;
 public class Proxy implements GlobalOptWSSEI {
 
 	/**
-	 * The namespace of the Global Optimiser service.
-	 */
-	private static final String NAMESPACE = "http://Services.WS.GlobalOpt.ePolicy.ai.unibo.it/";
-
-	/**
-	 * The URI where the Global Optimiser service is deployed.
-	 */
-	private static final String URI = "http://globalopt.epolicy-project.eu/GlobalOptWS/services/GlobalOpt";
-	// "http://localhost:8080/GlobalOptWS/services/GlobalOpt";
-
-	/**
-	 * The WSDL where the Global Optimiser service is deployed.
-	 */
-	private static final String WSDL = "http://globalopt.epolicy-project.eu/GlobalOptWS/services/GlobalOpt/?wsdl";
-	// "http://localhost:8080/GlobalOptWS/services/GlobalOpt/?wsdl";
-
-	/**
 	 * The proxy for the Global Optimiser service.
 	 */
 	private GlobalOptWSSEI proxy;
@@ -52,14 +35,14 @@ public class Proxy implements GlobalOptWSSEI {
 	/**
 	 * The only instance on this proxy.
 	 */
-	private static GlobalOptWSSEI instance = null;
+	private static volatile GlobalOptWSSEI instance = null;
 
 	/**
 	 * Returns the only instance on this proxy.
 	 * 
 	 * @return the only instance on this proxy
 	 */
-	public static GlobalOptWSSEI getInstance() throws MalformedURLException {
+	public static synchronized GlobalOptWSSEI getInstance() throws MalformedURLException {
 		if (instance == null)
 			instance = new Proxy();
 		return instance;
@@ -71,17 +54,17 @@ public class Proxy implements GlobalOptWSSEI {
 	 * @throws MalformedURLException
 	 */
 	private Proxy() throws MalformedURLException {
-		QName nameService = new QName(NAMESPACE, "GlobalOpt");
-		QName namePort = new QName(NAMESPACE, "GlobalOptSimpleWSSEIPort");
-		Service service = Service.create(new URL(WSDL), nameService);
-		service.addPort(namePort, SOAPBinding.SOAP11HTTP_BINDING, URI);
+		QName nameService = new QName(Connector.NAMESPACE, "GlobalOpt");
+		QName namePort = new QName(Connector.NAMESPACE, "GlobalOptSimpleWSSEIPort");
+		Service service = Service.create(new URL(Connector.WSDL), nameService);
+		service.addPort(namePort, SOAPBinding.SOAP11HTTP_BINDING, Connector.URI);
 		proxy = service.getPort(GlobalOptWSSEI.class);
 		Client client = ClientProxy.getClient(proxy);
 		HTTPConduit httpConduit = (HTTPConduit) client.getConduit();
 		httpConduit.getClient().setReceiveTimeout(1000 * 60 * 30);
 		System.out.println(">> Service: " + nameService);
 		System.out.println(">> Port:    " + namePort);
-		System.out.println(">> URL:     " + new URL(WSDL));
+		System.out.println(">> URL:     " + new URL(Connector.WSDL));
 		assert invariant() : "Illegal state in Proxy()";
 	}
 

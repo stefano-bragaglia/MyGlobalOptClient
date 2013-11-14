@@ -53,12 +53,12 @@
 						<li><small>
 							<i><span class="text-success" id="helpCost1">cost</span> <span class="text-success">&gt;=</span> 
 							   <span class="text-success" id="helpElectric1">electric</span></i> 
-							   (or similar)</small></li>
-					</ul> <small>where <i>Source</i> is the key for a <span class="text-info">source</span>
-						(see the references below), 
+							   (or similar using 
 						<i><span class="text-success" id="helpCost2">cost</span></i>,
 						<i><span class="text-success" id="helpElectric2">electric</span></i>
-						or <i><span class="text-success" id="helpThermal2">thermal</span></i></small>
+						or <i><span class="text-success" id="helpThermal2">thermal</span></i>)</small></li>
+					</ul> <small>where <i>Source</i> is the key for a <span class="text-info">source</span>
+						(see the references below)</small>
 				</li>
 				<li><strong>Objective functions:</strong> list one or more
 					objectives to optimise

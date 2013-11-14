@@ -1,23 +1,28 @@
+<%@page import="globalopt.ws.model.Solution"%>
+<%
+	int index = (Integer) request.getAttribute("scenario.index");
+	Solution solution = (Solution) request.getAttribute("solution");
+%>
 
 <div class="tabbable">
 	<ul class="nav nav-tabs nav-tabs-border">
-		<li class="active"><a href="#receptors<%out.print("1");%>" data-toggle="tab">Receptors</a></li>
-		<li><a href="#sources<%out.print("1");%>" data-toggle="tab">Energy Sources</a></li>
-		<li><a href="#costs<%out.print("1");%>" data-toggle="tab">Detailed Costs</a></li>
-		<li><a href="#emit<%out.print("1");%>" data-toggle="tab">Emissions and Pollutants</a></li>
+		<li class="active"><a href="#receptors<%=index%>" data-toggle="tab">Receptors</a></li>
+		<li><a href="#sources<%=index%>" data-toggle="tab">Energy Sources</a></li>
+		<li><a href="#costs<%=index%>" data-toggle="tab">Detailed Costs</a></li>
+		<li><a href="#emit<%=index%>" data-toggle="tab">Emissions and Pollutants</a></li>
 	</ul>
 	<div class="tab-content">
-		<div class="tab-pane tab-pane-welled tab-pane-border active" id="receptors<%out.print("1");%>">
+		<div class="tab-pane tab-pane-welled tab-pane-border active" id="receptors<%=index%>">
 			<p>I'm in Section 1.</p>
 		</div>
-		<div class="tab-pane tab-pane-welled tab-pane-border" id="sources<%out.print("1");%>">
-			<p>Howdy, I'm in Section 2.</p>
+		<div class="tab-pane tab-pane-welled tab-pane-border" id="sources<%=index%>">		
+			<%=solution.getTableSources(index)%>
 		</div>
-		<div class="tab-pane tab-pane-welled tab-pane-border" id="costs<%out.print("1");%>">
+		<div class="tab-pane tab-pane-welled tab-pane-border" id="costs<%=index%>">
 			<p>Howdy, I'm in Section 3.</p>
 		</div>
-		<div class="tab-pane tab-pane-welled tab-pane-border" id="emit<%out.print("1");%>">
-			<p>Howdy, I'm in Section 4.</p>
+		<div class="tab-pane tab-pane-welled tab-pane-border" id="emit<%=index%>">
+			<%=solution.getTableEmissions(index)%>
 		</div>
 	</div>
 </div>

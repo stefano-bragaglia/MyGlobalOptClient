@@ -67,6 +67,7 @@ public class Servlet extends HttpServlet {
 		session.setAttribute("computations", computations);
 		request.setAttribute("computations", computations);
 		request.setAttribute("timestamp", solution.getDuration());
+		request.setAttribute("solution", solution);
 
 		// if (computations < 1000000)
 		// 	throw new IllegalArgumentException("" + Arrays.toString(solution.objectives()));

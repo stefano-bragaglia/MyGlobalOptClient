@@ -60,7 +60,7 @@
 					out.println(String.format("\t\t\t<div class=\"tab-pane\" id=\"scenario%d\">", s + 1));
 					out.println("\t\t\t\t<div class=\"well\">");
 					out.println(String.format("\t\t\t\t\t<h4>%s</h4>", scenarios[s]));
-					request.setAttribute("scenario.index", 1 + s);
+					request.setAttribute("scenario.index", s);
 			%>		
 					<%@include file="results/scenario.jsp"%>
 			<%		

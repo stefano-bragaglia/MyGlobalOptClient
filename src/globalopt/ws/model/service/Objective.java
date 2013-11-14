@@ -121,12 +121,12 @@ public class Objective {
 				|| desc.equals(ELETTRICA) && locale.equals(Helper.ITA)) {
 			this.kind = Kind.ELECTRIC;
 			desc = desc.substring(0, 1).toUpperCase() + desc.substring(1).toLowerCase();
-			this.unit = "ktoe";
+			this.unit = "kTOE";
 		} else if (desc.equals(THERMAL) && locale.equals(Helper.ENG) //
 				|| desc.equals(TERMICA) && locale.equals(Helper.ITA)) {
 			this.kind = Kind.THERMAL;
 			desc = desc.substring(0, 1).toUpperCase() + desc.substring(1).toLowerCase();
-			this.unit = "ktoe";
+			this.unit = "kTOE";
 		} else
 			this.kind = Kind.UNKNOWN;
 		this.name = desc;

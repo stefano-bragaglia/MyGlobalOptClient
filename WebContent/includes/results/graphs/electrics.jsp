@@ -3,9 +3,9 @@
 
 <script type="text/javascript">
 	$(function() {
-		var titleLang = "Electric energy per source (in ktoe)";
+		var titleLang = "Electric energy per source (in kTOE)";
 		if ($('#inputLanguage').val() == "it")
-			titleLang = "Energia elettrica per tipologia (in ktoe)";
+			titleLang = "Energia elettrica per tipologia (in kTOE)";
 		$('#graphElectrics').highcharts( {
 							chart : { type : 'bar' },
 							title : { text : '' },

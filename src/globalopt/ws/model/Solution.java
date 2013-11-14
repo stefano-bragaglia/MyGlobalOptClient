@@ -10,10 +10,17 @@ import globalopt.ws.model.service.graphs.Electrics;
 import globalopt.ws.model.service.graphs.Functions;
 import globalopt.ws.model.service.graphs.Graph;
 import globalopt.ws.model.service.graphs.Thermals;
+import it.unibo.ai.ePolicy.GlobalOpt.Domain.Emission;
+import it.unibo.ai.ePolicy.GlobalOpt.IO.GlobalOptSingleValue;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Input.GOParetoInputParam;
+import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.EmittedEmissions;
+import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.EnergyAssignments;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.GOParetoOutput;
+import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.GlobalOptOutput;
 
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author stefano
@@ -248,10 +255,10 @@ public class Solution {
 		if (names == null) {
 			names = new String[boundaries.length + transitionals.length];
 			int i = 0;
-//			for (String boundary : boundaries)
-//				names[i++] = "\"" + boundary + "\"";
-//			for (String transitional : transitionals)
-//				names[i++] = "\"" + transitional + "\"";
+			// for (String boundary : boundaries)
+			// names[i++] = "\"" + boundary + "\"";
+			// for (String transitional : transitionals)
+			// names[i++] = "\"" + transitional + "\"";
 			for (String boundary : boundaries)
 				names[i++] = boundary;
 			for (String transitional : transitionals)
@@ -295,6 +302,104 @@ public class Solution {
 		loadScenarios();
 		assert invariant() : "Illegal state in Solution.scenarios()";
 		return names.length;
+	}
+
+	private GlobalOptOutput[] scenarios;
+
+	/**
+	 * @param index
+	 * @return
+	 */
+	public String getTableSources(int index) {
+		if (scenarios == null)
+			scenarios = output.getPlansList();
+		if (index < 0 || index >= scenarios.length)
+			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getSourcesTable(int): "
+					+ index);
+		boolean head = false;
+		String sign = "tableSources";
+		String result;
+		result = String.format("<script type=\"text/javascript\">$(function() { tablesort($('#%s%d')); });</script>\n",
+				sign, index);
+		result += String.format("<div class=\"text-center\"><table id=\"%s%d\" class=\"tablesorter\">", sign, index);
+		EnergyAssignments assignments = scenarios[index].getEnergySources();
+		Map<String, GlobalOptSingleValue> map = assignments.getAssignments();
+		if (map != null) {
+			String unit = "";
+			Double value = Double.NaN;
+			GlobalOptSingleValue single;
+			for (String key : map.keySet()) {
+				single = map.get(key);
+				if (!head) {
+					result += String.format("<thead>\n<tr><th>%s</th><th>%s</th></tr>\n</thead>\n<tbody>\n",
+							assignments.getEnergySourceLabel(), assignments.getInstalledPowerLabel());
+					head = true;
+				}
+				if (single != null) {
+					value = single.getValue();
+					unit = single.getMeasurementUnit();
+					if (value == null)
+						value = Double.NaN;
+					if (unit == null)
+						unit = "";
+				}
+				result += String.format(
+						"<tr><td>%s</td><td class=\"text-right\">%,.2f <small class=\"muted\">%s</small></td></tr>\n",
+						key, value, unit);
+			}
+		}
+		result += "</tbody>\n</table>\n</div>\n";
+		assert invariant() : "Illegal state in Solution.getTableSources(int)";
+		return result;
+	}
+
+	/**
+	 * @param index
+	 * @return
+	 */
+	public String getTableEmissions(int index) {
+		if (scenarios == null)
+			scenarios = output.getPlansList();
+		if (index < 0 || index >= scenarios.length)
+			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getSourcesTable(int): "
+					+ index);
+		boolean head = false;
+		String sign = "tableEmissions";
+		String result;
+		result = String.format("<script type=\"text/javascript\">$(function() { tablesort($('#%s%d')); });</script>\n",
+				sign, index);
+		result += String.format("<div class=\"text-center\"><table id=\"%s%d\" class=\"tablesorter\">", sign, index);
+		Locale locale = scenarios[index].getMylocale();
+		EmittedEmissions emitted = scenarios[index].getTheEmittedEmissions();
+		Map<String, GlobalOptSingleValue> map = emitted.getEmissions();
+		if (map != null) {
+			String unit = "";
+			Double value = Double.NaN;
+			GlobalOptSingleValue single;
+			for (String key : map.keySet()) {
+				value = Double.NaN;
+				single = map.get(key);
+				if (!head) {
+					result += String.format("<thead>\n<tr><th>%s</th><th>%s</th></tr>\n</thead>\n<tbody>\n",
+							emitted.getPollutantLabel(), emitted.getQuantityLabel());
+					head = true;
+				}
+				if (single != null) {
+					value = single.getValue();
+					unit = single.getMeasurementUnit();
+					if (value == null)
+						value = Double.NaN;
+					if (unit == null)
+						unit = "";
+				}
+				result += String
+						.format("<tr><td>%s <small class=\"muted\">(%s)</small></td><td class=\"text-right\">%,.2f <small class=\"muted\">%s</small></td></tr>\n", //
+								Emission.getEmissionByShortName(key, locale).getName(), key, value, unit);
+			}
+		}
+		result += "</tbody>\n</table>\n</div>\n";
+		assert invariant() : "Illegal state in Solution.getTableEmissions(int)";
+		return result;
 	}
 
 }
