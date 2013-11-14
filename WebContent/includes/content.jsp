@@ -25,7 +25,7 @@
 			<p>
 				<small><span class="muted">Computing the scenarios
 						took <strong class="text-info">${timestamp}</strong>.<br /> <strong
-						class="text-info">${computations} query/ies</strong> answered in
+						class="text-info">${computations} query/ies</strong> answered during
 						this session.
 				</span></small>
 			</p>
