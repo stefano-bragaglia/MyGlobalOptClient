@@ -348,7 +348,7 @@ public class Solution {
 						unit = "";
 				}
 				result += String
-						.format("<tr><td>%s</td><td class=\"text-right\">%,.2f</td><td><small class=\"muted\">%s</small></td></tr>\n",
+						.format("<tr><td>%s</td><td class=\"text-right\">%,.2f</td><td class=\"col-units\"><small class=\"muted\">%s</small></td></tr>\n",
 								key, value, unit);
 			}
 		}
@@ -384,7 +384,7 @@ public class Solution {
 				value = Double.NaN;
 				single = map.get(key);
 				if (!head) {
-					result += String.format("<thead>\n<tr><th>%s</th><th>%s</th><th>%s</th></tr>\n</thead>\n<tbody>\n",
+					result += String.format("<thead>\n<tr><th>%s</th><th>%s</th><th class=\"col-units\">%s</th></tr>\n</thead>\n<tbody>\n",
 							emitted.getPollutantLabel(), emitted.getQuantityLabel(), scenarios[index].getDetailed()
 									.getQuantityUnitLabel());
 					head = true;
@@ -398,7 +398,7 @@ public class Solution {
 						unit = "";
 				}
 				result += String
-						.format("<tr><td>%s <small class=\"muted\">(%s)</small></td><td class=\"text-right\">%,.2f</td><td><small class=\"muted\">%s</small></td></tr>\n", //
+						.format("<tr><td>%s <small class=\"muted\">(%s)</small></td><td class=\"text-right\">%,.2f</td><td class=\"col-units\"><small class=\"muted\">%s</small></td></tr>\n", //
 								Emission.getEmissionByShortName(key, locale).getName(), key, value, unit);
 			}
 		}
@@ -435,7 +435,7 @@ public class Solution {
 				multiple = map.get(key);
 				if (!head) {
 					result += String
-							.format("<thead>\n<tr><th>%s</th><th>%s</th><th>%s</th><th colspan=\"2\">%s</th></tr>\n</thead>\n<tbody>\n",
+							.format("<thead>\n<tr><th>%s</th><th>%s</th><th class=\"col-units\">%s</th><th colspan=\"2\">%s</th></tr>\n</thead>\n<tbody>\n",
 									detailed.getActionTypeLabel(), detailed.getQuantityLabel(),
 									detailed.getQuantityUnitLabel(), detailed.getActionCostLabel());
 					head = true;
@@ -462,7 +462,7 @@ public class Solution {
 								unitCost = "";
 						}
 						result += String
-								.format("<tr><td>%s</td><td class=\"text-right\">%,.2f</td><td><small class=\"muted\">%s</small></td><td class=\"text-right\">%,.2f</td><td><small class=\"muted\">%s</small></td></tr>\n", //
+								.format("<tr><td>%s</td><td class=\"text-right\">%,.2f</td><td class=\"col-units\"><small class=\"muted\">%s</small></td><td class=\"text-right\">%,.2f</td><td class=\"col-units\"><small class=\"muted\">%s</small></td></tr>\n", //
 										key, quantity, unitQuantity, cost, unitCost);
 					}
 				}
@@ -509,7 +509,7 @@ public class Solution {
 				multiple = map.get(key);
 				if (!head) {
 					result += String
-							.format("<thead>\n<tr><th>%s</th><th>%s</th><th>%s</th><th colspan=\"2\">%s</th><th colspan=\"2\">%s</th>\n</thead>\n<tbody>\n",
+							.format("<thead>\n<tr><th>%s</th><th>%s</th><th class=\"co-units\">%s</th><th colspan=\"2\">%s</th><th colspan=\"2\">%s</th>\n</thead>\n<tbody>\n",
 									costs.getEnergySourceTypeLabel(), costs.getQuantityLabel(), costs.getQuantityUnitLabel(), pricost, seccost);
 					head = true;
 				}
@@ -544,7 +544,7 @@ public class Solution {
 								unitSecondary = "";
 						}
 						result += String
-								.format("<tr><td>%s</td><td class=\"text-right\">%,.2f</td><td><small class=\"muted\">%s</small></td><td class=\"text-right\">%,.2f</td><td><small class=\"muted\">%s</small></td><td class=\"text-right\">%,.2f</td><td><small class=\"muted\">%s</small></td></tr>\n", //
+								.format("<tr><td>%s</td><td class=\"text-right\">%,.2f</td><td class=\"col-units\"><small class=\"muted\">%s</small></td><td class=\"text-right\">%,.2f</td><td class=\"col-units\"><small class=\"muted\">%s</small></td><td class=\"text-right\">%,.2f</td><td class=\"col-units\"><small class=\"muted\">%s</small></td></tr>\n", //
 										key, quantity, unitQuantity, primary, unitPrimary, secondary, unitSecondary);
 					}
 				}
@@ -555,4 +555,10 @@ public class Solution {
 		return result;
 	}
 
+	public String getGraphReceptor() {
+		String result = "";
+		assert invariant() : "Illegal state in Solution.getTableActions(int)";
+		return result;		
+	}
+	
 }

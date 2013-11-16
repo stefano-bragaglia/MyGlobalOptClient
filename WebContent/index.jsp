@@ -47,6 +47,10 @@ body {
 	}
 }
 
+.table th.col-units, .table tf.col-units {
+	width: 65px;
+}
+
 .table th.text-right,.table td.text-right {
 	text-align: right;
 }
@@ -70,7 +74,7 @@ body {
 		$.extend($.tablesorter.themes.bootstrap, {
 			// these classes are added to the table. To see other table classes available,
 			// look here: http://twitter.github.com/bootstrap/base-css.html#tables
-			table : 'table table-condensed table-bordered',
+			table : 'table table-condensed table-bordered table-striped table-hover',
 			header : 'bootstrap-header info', // give the header a gradient background
 			footerRow : '',
 			footerCells : '',

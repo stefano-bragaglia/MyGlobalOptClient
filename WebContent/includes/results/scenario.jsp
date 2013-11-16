@@ -14,7 +14,7 @@
 	</ul>
 	<div class="tab-content">
 		<div class="tab-pane tab-pane-welled tab-pane-border active" id="receptors<%=index%>">
-			<p>I'm in Section 1.</p>
+			<p>This is a placeholder for a graph. Either the content and the tab label are temporary.</p> 
 		</div>
 		<div class="tab-pane tab-pane-welled tab-pane-border" id="sources<%=index%>">		
 			<%=solution.getTableSources(index)%>
