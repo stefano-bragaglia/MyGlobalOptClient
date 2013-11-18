@@ -20,7 +20,7 @@
 				+ 'min_max_source("Windmill Electrical Generators",115,560)\n'
 				+ 'min_max_source("Thermodynamic Solar Plants",15,60)\n'
 				+ 'min_max_source("Superficial Geothermal Plants",0,0)\n'
-				+ 'min_max_source("Thermoelectric Biomass Plants",0,0)\n'
+				+ 'min_max_source("Biomass-based Thermal Plants",0,0)\n'
 				+ 'min_max_source("Solar Thermal Panels",0,0)';
 		var functs = 'max(electric)\n' + 'min(cost)\n' + 'max(rec(9))';
 		if ($('#inputLanguage').val() == 'it') {

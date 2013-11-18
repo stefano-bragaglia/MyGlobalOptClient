@@ -11,6 +11,7 @@ import globalopt.ws.model.service.graphs.Functions;
 import globalopt.ws.model.service.graphs.Graph;
 import globalopt.ws.model.service.graphs.Thermals;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.Emission;
+import it.unibo.ai.ePolicy.GlobalOpt.Domain.Receptor;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.GlobalOptMultipleValue;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.GlobalOptSingleValue;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Input.GOParetoInputParam;
@@ -25,12 +26,66 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupDir;
+
 /**
  * @author stefano
  * 
  */
 public class Solution {
-
+	
+//	private static final 
+//	
+//	1. 'Limitaz.subsidenza e stabilita` falde': -6179.706528397277 
+//	1. 'Limitaz.subsidenza e stabilita` falde': 1298.6177968749998 
+//	2. 'Stabilita` di versanti e scarpate': -314529.68046351173 
+//	2. 'Stabilita` di versanti e scarpate': -2786.1958937499994 
+//	3. 'Stabilita` di litorali o fondali mare': -37043.1857098924 
+//	3. 'Stabilita` di litorali o fondali mare': -183.05586875000003 
+//	4. 'Stabilita` di rive o alvei fluviali': -130433.2301006342 
+//	4. 'Stabilita` di rive o alvei fluviali': -1096.6462500000005 
+//	5. 'Qualita` pedologica di suoli': -305557.5722811347 
+//	5. 'Qualita` pedologica di suoli': -2899.6204437499996 
+//	6. 'Qualita` mare': -189023.0388695859 
+//	6. 'Qualita` mare': -1357.8259375000002 
+//	7. 'Qualita` acque interne superficiali': -329369.4203612669 
+//	7. 'Qualita` acque interne superficiali': -2333.7355374999993 
+//	8. 'Qualita` acque sotterranee': -459370.35666489246 
+//	8. 'Qualita` acque sotterranee': -3671.23493125 
+//	9. 'Qualita` atmosfera': -424068.2229526892 
+//	9. 'Qualita` atmosfera': 73.14381250000073 
+//	10. 'Qualita` clima': -154583.90628334114 
+//	10. 'Qualita` clima': 2923.720481249999 
+//	11. 'Benessere vegetazione terrestre': -651403.2122003649 
+//	11. 'Benessere vegetazione terrestre': -4845.85731875 
+//	12. 'Benessere fauna terrestre': -862655.8001683186 
+//	12. 'Benessere fauna terrestre': -7144.56509375 
+//	13. 'Beness.biocenosi acquatic. e palustri': -676752.3578627767 
+//	13. 'Beness.biocenosi acquatic. e palustri': -5367.547524999998 
+//	14. 'Benessere e salute uomo': -32410.868368519634 
+//	14. 'Benessere e salute uomo': 12714.614037500001 
+//	15. 'Qualita` di paesaggi sensibili': -898461.7415429621 
+//	15. 'Qualita` di paesaggi sensibili': -8557.805681250002 
+//	16. 'Valore beni culturali e/o storici': -561651.3476453229 
+//	16. 'Valore beni culturali e/o storici': -5948.834937499999 
+//	17. 'Accessibilita` di risorse per lo svago': -100973.66962237039 
+//	17. 'Accessibilita` di risorse per lo svago': -114.71320312499998 
+//	18. 'Disponibilita` risorse idriche': -431061.0537254023 
+//	18. 'Disponibilita` risorse idriche': -3166.68959375 
+//	19. 'Disponibilita` agronomica di suoli fertili': -376675.02008478047 
+//	19. 'Disponibilita` agronomica di suoli fertili': -3429.1998812500005 
+//	20. 'Disponibilita` risorse litoidi': 740.2063062499999 
+//	20. 'Disponibilita` risorse litoidi': 76969.6279755807 
+//	21. 'Disponibilita` energia': -15711.461196872733 
+//	21. 'Disponibilita` energia': 3559.836125 
+//	22. 'Disponibilita` risorse produttive': 12266.206437500003 
+//	22. 'Disponibilita` risorse produttive': 999999.9999999986 
+//	23. 'Valore di opere e di beni materiali': 9943.904118750002 
+//	23. 'Valore di opere e di beni materiali': 761471.1472190408 
+//	
+	
 	private String[] boundaries;
 
 	private Graph comparison;
@@ -384,9 +439,10 @@ public class Solution {
 				value = Double.NaN;
 				single = map.get(key);
 				if (!head) {
-					result += String.format("<thead>\n<tr><th>%s</th><th>%s</th><th class=\"col-units\">%s</th></tr>\n</thead>\n<tbody>\n",
-							emitted.getPollutantLabel(), emitted.getQuantityLabel(), scenarios[index].getDetailed()
-									.getQuantityUnitLabel());
+					result += String
+							.format("<thead>\n<tr><th>%s</th><th>%s</th><th class=\"col-units\">%s</th></tr>\n</thead>\n<tbody>\n",
+									emitted.getPollutantLabel(), emitted.getQuantityLabel(), scenarios[index]
+											.getDetailed().getQuantityUnitLabel());
 					head = true;
 				}
 				if (single != null) {
@@ -481,7 +537,8 @@ public class Solution {
 		if (scenarios == null)
 			scenarios = output.getPlansList();
 		if (index < 0 || index >= scenarios.length)
-			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getTableActions(int): " + index);
+			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getTableActions(int): "
+					+ index);
 		boolean head = false;
 		String sign = "tableActions";
 		String result;
@@ -510,7 +567,8 @@ public class Solution {
 				if (!head) {
 					result += String
 							.format("<thead>\n<tr><th>%s</th><th>%s</th><th class=\"co-units\">%s</th><th colspan=\"2\">%s</th><th colspan=\"2\">%s</th>\n</thead>\n<tbody>\n",
-									costs.getEnergySourceTypeLabel(), costs.getQuantityLabel(), costs.getQuantityUnitLabel(), pricost, seccost);
+									costs.getEnergySourceTypeLabel(), costs.getQuantityLabel(),
+									costs.getQuantityUnitLabel(), pricost, seccost);
 					head = true;
 				}
 				if (multiple != null) {
@@ -555,10 +613,30 @@ public class Solution {
 		return result;
 	}
 
-	public String getGraphReceptor() {
-		String result = "";
+	private Map<Receptor, java.awt.geom.Point2D.Double> bounds;
+
+	public String getGraphReceptor(int tag, int index, Receptor receptor) {
+		if (receptor == null)
+			throw new IllegalArgumentException("Illegal 'receptor' argument in Solution.getGraphReceptor(int, int, Receptor" + receptor);
+		double min = bounds.get(receptor).getX();
+		double max = bounds.get(receptor).getY();
+		double third = (max - min) / 3.0;
+		double left = min + third;
+		double right = max - third;
+		double value = scenarios[index].getImpacts().computeTotalRecByShortName(receptor.getShortName(),
+				scenarios[index].getMylocale());
+		STGroup group = new STGroupDir("/tmp");
+		ST st = group.getInstanceOf("receptor");
+		st.add("tag", tag);
+		st.add("title", receptor.getName());
+		st.add("min", min);
+		st.add("max", max);
+		st.add("left", left);
+		st.add("right", right);
+		st.add("value", value);
+		String result = st.render();
 		assert invariant() : "Illegal state in Solution.getTableActions(int)";
-		return result;		
+		return result;
 	}
-	
+
 }

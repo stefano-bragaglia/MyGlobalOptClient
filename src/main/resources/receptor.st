@@ -1,8 +1,8 @@
-<div id="graphReceptor" style="width: 300px; height: 200px; margin: 0 auto"></div>
+<div id="graphReceptor?tag?" style="width: 300px; height: 200px; margin: 0 auto"></div>
 
 <script type="text/javascript">
 $(function () {
-	$('#graphReceptor').highcharts({
+	$('#graphReceptor?tag?').highcharts({
 	    chart: {
 	        type: 'gauge',
 	        plotBorderWidth: 1,
@@ -27,26 +27,25 @@ $(function () {
 	    	}
 	    },
 
-	    title: { text: 'VU meter' },
+	    title: { text: '?title?' },
 	    yAxis: [{
-	        min: -20, max: 7,
+	        min: ?min?, max: ?max?,
 	        minorTickPosition: 'outside', tickPosition: 'outside',
 	        labels: { rotation: 'auto', distance: 20 },
 	        plotBands: [{
-	        	from: -20, to: -11,
+	        	from: ?min?, to: ?left?,
 	        	color: '#C02316', innerRadius: '100%', outerRadius: '105%'
 	        }, {
-	        	from: -2, to: 7,
+	        	from: ?right?, to: ?max?,
 	        	color: '#16C023', innerRadius: '100%', outerRadius: '105%'
 	        }],
 	        pane: 0,
 	        title: {
-	        	text: '<br/><span style="font-size:8px">Air Quality</span>',
+	        	text: '<br/><span style="font-size:8px">?title?</span>',
 	        	y: -40
 	        }
 	    }],
-	    series: [{ data: [-15], yAxis: 0 }]
-	
+	    series: [{ data: [?value?], yAxis: 0 }]
 	});
 });
 </script>

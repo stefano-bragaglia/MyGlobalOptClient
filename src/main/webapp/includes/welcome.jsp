@@ -3,7 +3,7 @@
 		$('#navtabWelcome').removeClass('active');
 		$('#welcome').removeClass('active');
 		$('#navtabQuery').addClass('active');
-		$('#query').addClass('active');		
+		$('#query').addClass('active');
 	}
 </script>
 <div class="container-fluid">
@@ -16,10 +16,14 @@
 					This page is for <strong>testing purposes only</strong>.
 				</p>
 				<hr />
-				<p>This is a template for a simple marketing or informational
-					website. It includes a large callout called the hero unit and three
-					supporting pieces of content. Use it as a starting point to create
-					something more unique.</p>
+				<p>
+					This web application is an interface to more easily query the
+					Global Optimiser component that was implemented for the <strong>ePolicy</strong>
+					project. Once queried, this interface presents the computed data in
+					forms of graphs and interactive tables to let the user evaluate the
+					possible alternative scenarios for the objective functions to
+					optimise.
+				</p>
 				<p>
 					<a href="#" onclick="query()"
 						class="btn btn-primary btn-large push" data-toggle="tab">Query

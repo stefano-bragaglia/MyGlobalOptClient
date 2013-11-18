@@ -63,8 +63,8 @@ public class Objective {
 				System.out.println(i + ". " + o.toString() + ": "
 						+ out.getImpacts().computeTotalRecByShortName(r.getShortName(), locale) + " " + o.getUnit());
 				i += 1;
-				if (i > 3)
-					break;
+//				if (i > 3)
+//					break;
 			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
