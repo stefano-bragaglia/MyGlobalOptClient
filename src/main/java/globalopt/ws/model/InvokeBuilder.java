@@ -131,20 +131,10 @@ public class InvokeBuilder {
 	 * 
 	 * @return the current objective functions (as a <code>String</code>)
 	 */
-	public String getConstraints() {
+	public Constraint[] getConstraints() {
 		if (constraints == null)
-			return "";
-		int iMax = constraints.length - 1;
-		if (iMax == -1)
-			return "";
-
-		StringBuilder b = new StringBuilder();
-		for (int i = 0;; i++) {
-			b.append(constraints[i]);
-			if (i == iMax)
-				return b.toString();
-			b.append("\n");
-		}
+			return new Constraint[0];
+		return constraints;
 	}
 
 	/**

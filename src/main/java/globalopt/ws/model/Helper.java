@@ -3,6 +3,7 @@
  */
 package globalopt.ws.model;
 
+import globalopt.ws.model.service.Ranges;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.Receptor;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Input.GOParetoInputParam;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.GOParetoOutput;
@@ -55,10 +56,13 @@ public class Helper {
 	 * @param builder
 	 *            the <code>ParetoBuilder</code> of the query to compute
 	 */
-	public static Solution compute(ParetoBuilder builder) {
+	public static Solution compute(ParetoBuilder builder, Ranges ranges) {
 		if (builder == null)
-			throw new IllegalArgumentException("Illegal 'builder' argument in Helper.compute(ParetoBuilder): "
+			throw new IllegalArgumentException("Illegal 'builder' argument in Helper.compute(ParetoBuilder, Ranges): "
 					+ builder);
+		
+		// System.out.println(">> Ranges ("+builder.getRanges().hashCode()+"): " + builder.getRanges());
+		
 		GOParetoInputParam params = null;
 		GOParetoOutput output = null;
 		long duration = System.currentTimeMillis();
@@ -82,7 +86,7 @@ public class Helper {
 			e.printStackTrace();
 		}
 		duration = System.currentTimeMillis() - duration;
-		return new Solution(params, output, duration);
+		return new Solution(params, output, ranges, duration);
 	}
 
 	private static final boolean FULL = false;

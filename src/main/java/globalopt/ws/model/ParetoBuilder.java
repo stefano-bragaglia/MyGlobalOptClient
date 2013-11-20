@@ -7,6 +7,7 @@ import it.unibo.ai.ePolicy.GlobalOpt.Domain.AbsoluteMaxBound;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.AbsoluteMinBound;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.Constraint;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.GenericConstraint;
+import it.unibo.ai.ePolicy.GlobalOpt.Domain.PrimaryActivity;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Input.GOParetoInputParam;
 
 import java.util.ArrayList;
@@ -22,10 +23,14 @@ public class ParetoBuilder {
 	private static final String MINMAX = "min_max_source(";
 	private static final String PAR = ")";
 
+	private Constraint[] bounds;
+
 	/**
 	 * The chosen constraints.
 	 */
 	private Constraint[] constraints;
+
+	private String descr;
 
 	/**
 	 * The chosen functions.
@@ -67,22 +72,12 @@ public class ParetoBuilder {
 	}
 
 	/**
-	 * Returns an InvokeBuilder out of this ParetoBuilder.
-	 * 
-	 * @return the InvokeBuilder out of this ParetoBuilder
-	 */
-	public InvokeBuilder stem() {
-		InvokeBuilder result = new InvokeBuilder(locale, constraints);
-		assert invariant() : "Illegal state in ParetoBuilder.build()";
-		return result;
-	}
-
-	/**
 	 * Resets the ParetoBuilder to its initial, empty state.
 	 * 
 	 * @return this ParetoBuilder
 	 */
 	public ParetoBuilder clear() {
+		bounds = new Constraint[0];
 		constraints = new Constraint[0];
 		functions = new String[0];
 		locale = new Locale("en", "US");
@@ -92,24 +87,25 @@ public class ParetoBuilder {
 	}
 
 	/**
+	 * Returns the string
+	 * 
+	 * @return
+	 */
+	public Constraint[] getBounds() {
+		if (bounds == null)
+			return new Constraint[0];
+		return bounds;
+	}
+
+	/**
 	 * Returns the objective functions.
 	 * 
 	 * @return the current objective functions (as a <code>String</code>)
 	 */
-	public String getConstraints() {
+	public Constraint[] getConstraints() {
 		if (constraints == null)
-			return "";
-		int iMax = constraints.length - 1;
-		if (iMax == -1)
-			return "";
-
-		StringBuilder b = new StringBuilder();
-		for (int i = 0;; i++) {
-			b.append(constraints[i]);
-			if (i == iMax)
-				return b.toString();
-			b.append("\n");
-		}
+			return new Constraint[0];
+		return constraints;
 	}
 
 	/**
@@ -129,6 +125,12 @@ public class ParetoBuilder {
 				return b.toString();
 			b.append("\n");
 		}
+	}
+
+	public int getHash() {
+		int result = descr.hashCode();
+		assert invariant() : "Illegal state in ParetoBuilder.getHash()";
+		return result;
 	}
 
 	/**
@@ -169,9 +171,9 @@ public class ParetoBuilder {
 	 * @return this ParetoBuilder
 	 */
 	public ParetoBuilder setConstraints(String desc) {
-		// TODO More sophisticated parsers are required to cope with undesired
-		// line breaks
-		List<Constraint> list = new ArrayList<Constraint>();
+		StringBuilder builder = new StringBuilder();
+		List<Constraint> blist = new ArrayList<Constraint>();
+		List<Constraint> clist = new ArrayList<Constraint>();
 		if (desc != null && !(desc = desc.trim()).isEmpty()) {
 			String[] lines = desc.split("\n");
 			for (String line : lines) {
@@ -182,13 +184,19 @@ public class ParetoBuilder {
 					key = key.substring(1, key.length() - 1);
 					double min = Double.parseDouble(params[1].trim());
 					double max = Double.parseDouble(params[2].trim());
-					list.add(new AbsoluteMinBound(key, locale, min));
-					list.add(new AbsoluteMaxBound(key, locale, max));
+					blist.add(new AbsoluteMinBound(key, locale, min));
+					blist.add(new AbsoluteMaxBound(key, locale, max));
+					clist.add(new AbsoluteMinBound(key, locale, min));
+					clist.add(new AbsoluteMaxBound(key, locale, max));
+					builder.append(String.format("%s(%.2f,%.2f)\n", PrimaryActivity.getPrimaryActivity(key, locale)
+							.convertLocale(Helper.ENG).getName(), min, max));
 				} else
-					list.add(new GenericConstraint(line));
+					clist.add(new GenericConstraint(line));
 			}
 		}
-		constraints = list.toArray(new Constraint[list.size()]);
+		bounds = blist.toArray(new Constraint[blist.size()]);
+		constraints = clist.toArray(new Constraint[clist.size()]);
+		descr = builder.toString();
 		assert invariant() : "Illegal state in ParetoBuilder.setConstraints(String)";
 		return this;
 	}
@@ -251,6 +259,17 @@ public class ParetoBuilder {
 		}
 		assert invariant() : "Illegal state in ParetoBuilder.setScenarios(String)";
 		return this;
+	}
+
+	/**
+	 * Returns an InvokeBuilder out of this ParetoBuilder.
+	 * 
+	 * @return the InvokeBuilder out of this ParetoBuilder
+	 */
+	public InvokeBuilder stem() {
+		InvokeBuilder result = new InvokeBuilder(locale, bounds);
+		assert invariant() : "Illegal state in ParetoBuilder.build()";
+		return result;
 	}
 
 }

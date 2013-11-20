@@ -3,8 +3,11 @@ package globalopt.ws.client;
 import globalopt.ws.model.Helper;
 import globalopt.ws.model.ParetoBuilder;
 import globalopt.ws.model.Solution;
+import globalopt.ws.model.service.Ranges;
 
 import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -48,9 +51,6 @@ public class Servlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		HttpSession session = request.getSession();
-		Integer computations = (Integer) session.getAttribute("computations");
-		if (computations == null)
-			computations = 0;
 
 		ParetoBuilder builder = new ParetoBuilder() //
 				.setLocale(request.getParameter("locale")) //
@@ -58,19 +58,37 @@ public class Servlet extends HttpServlet {
 				.setFunctions(request.getParameter("functions")) //
 				.setScenarios(request.getParameter("scenarios"));
 
-		Solution solution = Helper.compute(builder);
+		Integer computations = (Integer) session.getAttribute("computations");
+		if (computations == null)
+			computations = 0;
 
-		// InvokeBuilder min = problem.minimize(Receptor.getReceptorList(problem.getLocale())[0]);
-		// InvokeBuilder max = problem.maximize(Receptor.getReceptorList(problem.getLocale())[0]);
+		@SuppressWarnings("unchecked")
+		Map<Integer, Ranges> contexts = (Map<Integer, Ranges>) session.getAttribute("contexts");
+		if (contexts == null)
+			contexts = new Hashtable<Integer, Ranges>();
+		Ranges context = contexts.get(builder.hashCode());
+		if (context == null) {
+			try {
+				context = new Ranges(builder);
+			} catch (InterruptedException e) {
+				throw new ServletException(e);
+			}
+			contexts.put(context.getHash(), context);
+		}
 
+		Solution solution = Helper.compute(builder, context);
 		computations += 1;
+
 		session.setAttribute("computations", computations);
+		session.setAttribute("contexts", contexts);
+
 		request.setAttribute("computations", computations);
 		request.setAttribute("timestamp", solution.getDuration());
 		request.setAttribute("solution", solution);
 
 		// if (computations < 1000000)
-		// 	throw new IllegalArgumentException("" + Arrays.toString(solution.objectives()));
+		// throw new IllegalArgumentException("" +
+		// Arrays.toString(solution.objectives()));
 
 		request.setAttribute("comparison.categories", solution.getComparison().getCategories());
 		request.setAttribute("comparison.series", solution.getComparison().getSeries());
