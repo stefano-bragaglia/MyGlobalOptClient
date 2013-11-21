@@ -3,7 +3,9 @@
  */
 package globalopt.ws.model;
 
+import globalopt.ws.model.Wrapper.NameComparator;
 import globalopt.ws.model.service.Objective;
+import globalopt.ws.model.service.Range;
 import globalopt.ws.model.service.graphs.Comparison;
 import globalopt.ws.model.service.graphs.Costs;
 import globalopt.ws.model.service.graphs.Electrics;
@@ -23,8 +25,11 @@ import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.GlobalOptOutput;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.TotalCosts;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -590,6 +595,306 @@ public class Solution {
 		return result;
 	}
 
+	public String getVUMeter(int index) {
+		if (scenarios == null)
+			scenarios = output.getPlansList();
+		if (index < 0 || index >= scenarios.length)
+			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getVUMeter(int): " + index);
+		Locale locale = scenarios[index].getMylocale();
+		Receptor[] receptors = Receptor.getReceptorList(locale);
+		Arrays.sort(receptors, new NameComparator());
+		String name = receptors[0].getName();
+		String shortname = receptors[0].getShortName();
+		double value;
+		Range range = Wrapper.BOUNDS.get(receptors[0].convertLocale(Helper.ENG).getName());
+		if (null == range || 0 == range.getDelta())
+			value = Double.NaN;
+		else {
+			value = scenarios[index].getImpacts().computeTotalRecByShortName(receptors[0].getShortName(), locale);
+			value = (value - range.getMin()) / range.getDelta();
+		}
+		// Shouldn't happen, if so it is because of the different
+		// constraints: hack follows.
+		if (Double.NaN != value && 0.0 > value)
+			value = 0.0;
+		if (Double.NaN != value && 1.0 < value)
+			value = 1.0;
+		// end of hack
+		StringBuilder builder = new StringBuilder();
+		builder.append("$(function () {\n");
+		builder.append(String.format("$('#graphReceptors%d').highcharts({\n", index));
+		builder.append("chart: {\n");
+		builder.append("type: 'gauge',\n");
+		builder.append("plotBorderWidth: 1,\n");
+		builder.append("plotBackgroundColor: {\n");
+		builder.append("linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },\n");
+		builder.append("stops: [ [0, '#F0F0F0'], [0.3, '#FFFFFF'], [1, '#F0F0F0'] ]\n");
+		builder.append("},\n");
+		builder.append("plotBackgroundImage: null,\n");
+		builder.append("height: 300\n");
+		builder.append("},\n");
+		builder.append("credits: { enabled: false },\n");
+		builder.append(String.format("title: { text: '%s' },\n", name));
+		builder.append("tooltip: { enabled: false },\n");
+		builder.append("pane: [{\n");
+		builder.append("startAngle: -45, endAngle: 45,\n");
+		builder.append("background: null,\n");
+		builder.append("center: ['50%', '155%'],\n");
+		builder.append("size: 600\n");
+		builder.append("}],\n");
+		builder.append("yAxis: [{\n");
+		builder.append("min: 0.00, max: 1.00,\n");
+		builder.append("minorTickPosition: 'outside',\n");
+		builder.append("tickPosition: 'outside',\n");
+		builder.append("labels: { rotation: 'auto', distance: 20 },\n");
+		builder.append("plotBands: [{\n");
+		builder.append("from: 0.00, to: 0.33,\n");
+		builder.append("color: '#C11B17',\n");
+		builder.append("innerRadius: '100%',\n");
+		builder.append("outerRadius: '102%'\n");
+		builder.append("}, {\n");
+		builder.append("from: 0.67, to: 1.00,\n");
+		builder.append("color: '#347C17',\n");
+		builder.append("innerRadius: '100%',\n");
+		builder.append("outerRadius: '102%'\n");
+		builder.append("}],\n");
+		builder.append("pane: 0,\n");
+		builder.append("title: {\n");
+		builder.append(String.format("text : '%s<br/><span style=\"font-size:8px\">%s</span>',\n", shortname,
+				name));
+		builder.append("y : -40\n");
+		builder.append("}\n");
+		builder.append("}],\n");
+		builder.append("plotOptions: {\n");
+		builder.append("gauge: {\n");
+		builder.append("dataLabels: { enabled: false },\n");
+		builder.append("dial: { radius: '100%' }\n");
+		builder.append("}\n");
+		builder.append("},\n");
+		builder.append("series: [{\n");
+		builder.append(String.format("data: [%.2f],\n", value));
+		builder.append("yAxis: 0\n");
+		builder.append("}]\n");
+		builder.append("});\n");
+		builder.append("});\n");
+		assert invariant() : "Illegal state in Solution.getVUMeter(int)";
+		return builder.toString();
+	}
+
+	private TreeMap<Double, Receptor> ranking;
+
+	public String getStrongRecs(int index) {
+		if (scenarios == null)
+			scenarios = output.getPlansList();
+		if (index < 0 || index >= scenarios.length)
+			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getVUMeter(int): " + index);
+		if (ranking == null) {
+			double value;
+			Range range;
+			Locale locale = scenarios[index].getMylocale();
+			Receptor[] receptors = Receptor.getReceptorList(locale);
+			ranking = new TreeMap<Double, Receptor>();
+			for (Receptor receptor : receptors) {
+				range = Wrapper.BOUNDS.get(receptor.convertLocale(Helper.ENG).getName());
+				if (null == range || 0 == range.getDelta())
+					value = Double.NaN;
+				else {
+					value = scenarios[index].getImpacts().computeTotalRecByShortName(receptor.getShortName(), locale);
+					value = (value - range.getMin()) / range.getDelta();
+				}
+				// Shouldn't happen, if so it is because of the different
+				// constraints: hack follows.
+				if (Double.NaN != value && 0.0 > value)
+					value = 0.0;
+				if (Double.NaN != value && 1.0 < value)
+					value = 1.0;
+				// end of hack
+				ranking.put(value, receptor);
+			}
+		}
+		int i = 0;
+		StringBuilder builder = new StringBuilder();
+		builder.append("<div class=\"row-fluid\">\n");
+		Iterator<Entry<Double, Receptor>> iterator = ranking.descendingMap().entrySet().iterator();
+		while (iterator.hasNext() && i < 3) {
+			Entry<Double, Receptor> current = iterator.next();
+			double value = current.getKey();
+			String name = current.getValue().getName();
+			String shortname = current.getValue().getShortName();
+			builder.append("<div class=\"span4 text-center\">\n\n");			
+			builder.append("<script type=\"text/javascript\">\n");
+			builder.append("$(function () {\n");
+			builder.append(String.format("$('#graphStrongs_%d_%d').highcharts({\n", index, i));
+			builder.append("chart: {\n");
+			builder.append("type: 'gauge',\n");
+			builder.append("plotBorderWidth: 1,\n");
+			builder.append("plotBackgroundColor: {\n");
+			builder.append("linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },\n");
+			builder.append("stops: [ [0, '#D0FFD0'], [0.3, '#FFFFFF'], [1, '#D0FFD0'] ]\n");
+			builder.append("},\n");
+			builder.append("plotBackgroundImage: null,\n");
+			builder.append("height: 150\n");
+			builder.append("},\n");
+			builder.append("credits: { enabled: false },\n");
+			builder.append("title: { text: '' },\n");
+			builder.append("tooltip: { enabled: false },\n");
+			builder.append("pane: [{\n");
+			builder.append("startAngle: -45, endAngle: 45,\n");
+			builder.append("background: null,\n");
+			builder.append("center: ['50%', '145%'],\n");
+			builder.append("size: 250\n");
+			builder.append("}],\n");
+			builder.append("yAxis: [{\n");
+			builder.append("min: 0.00, max: 1.00,\n");
+			builder.append("minorTickPosition: 'outside',\n");
+			builder.append("tickPosition: 'outside',\n");
+			builder.append("labels: { rotation: 'auto', distance: 20 },\n");
+			builder.append("plotBands: [{\n");
+			builder.append("from: 0.00, to: 0.33,\n");
+			builder.append("color: '#C11B17',\n");
+			builder.append("innerRadius: '100%',\n");
+			builder.append("outerRadius: '102%'\n");
+			builder.append("}, {\n");
+			builder.append("from: 0.67, to: 1.00,\n");
+			builder.append("color: '#347C17',\n");
+			builder.append("innerRadius: '100%',\n");
+			builder.append("outerRadius: '102%'\n");
+			builder.append("}],\n");
+			builder.append("pane: 0,\n");
+			builder.append("title: {\n");
+			builder.append(String.format("text : '<br/>%s<br/><span style=\"font-size:8px\">%s</span>',\n", shortname,
+					name));
+			builder.append("y : -40\n");
+			builder.append("}\n");
+			builder.append("}],\n");
+			builder.append("plotOptions: {\n");
+			builder.append("gauge: {\n");
+			builder.append("dataLabels: { enabled: false },\n");
+			builder.append("dial: { radius: '100%' }\n");
+			builder.append("}\n");
+			builder.append("},\n");
+			builder.append("series: [{\n");
+			builder.append(String.format("data: [%.2f],\n", value));
+			builder.append("yAxis: 0\n");
+			builder.append("}]\n");
+			builder.append("});\n");
+			builder.append("});\n");
+			builder.append("</script>\n");
+			builder.append(String.format("<div id=\"graphStrongs_%d_%d\" style=\"width: 250px; height: 150px; margin: 0 auto\"></div>\n\n", index, i));
+			builder.append("</div>\n");
+			i += 1;
+		}
+		builder.append("</div>\n");
+		assert invariant() : "Illegal state in Solution.getVUMeter(int)";
+		return builder.toString();
+	}
+
+	public String getWeakRecs(int index) {
+		if (scenarios == null)
+			scenarios = output.getPlansList();
+		if (index < 0 || index >= scenarios.length)
+			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getVUMeter(int): " + index);
+		if (ranking == null) {
+			double value;
+			Range range;
+			Locale locale = scenarios[index].getMylocale();
+			Receptor[] receptors = Receptor.getReceptorList(locale);
+			ranking = new TreeMap<Double, Receptor>();
+			for (Receptor receptor : receptors) {
+				range = Wrapper.BOUNDS.get(receptor.convertLocale(Helper.ENG).getName());
+				if (null == range || 0 == range.getDelta())
+					value = Double.NaN;
+				else {
+					value = scenarios[index].getImpacts().computeTotalRecByShortName(receptor.getShortName(), locale);
+					value = (value - range.getMin()) / range.getDelta();
+				}
+				// Shouldn't happen, if so it is because of the different
+				// constraints: hack follows.
+				if (Double.NaN != value && 0.0 > value)
+					value = 0.0;
+				if (Double.NaN != value && 1.0 < value)
+					value = 1.0;
+				// end of hack
+				ranking.put(value, receptor);
+			}
+		}
+		int i = 0;
+		StringBuilder builder = new StringBuilder();
+		builder.append("<div class=\"row-fluid\">\n");
+		Iterator<Entry<Double, Receptor>> iterator = ranking.entrySet().iterator();
+		while (iterator.hasNext() && i < 3) {
+			Entry<Double, Receptor> current = iterator.next();
+			double value = current.getKey();
+			String name = current.getValue().getName();
+			String shortname = current.getValue().getShortName();
+			builder.append("<div class=\"span4 text-center\">\n\n");			
+			builder.append("<script type=\"text/javascript\">\n");
+			builder.append("$(function () {\n");
+			builder.append(String.format("$('#graphWeaks_%d_%d').highcharts({\n", index, i));
+			builder.append("chart: {\n");
+			builder.append("type: 'gauge',\n");
+			builder.append("plotBorderWidth: 1,\n");
+			builder.append("plotBackgroundColor: {\n");
+			builder.append("linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },\n");
+			builder.append("stops: [ [0, '#FFD0D0'], [0.3, '#FFFFFF'], [1, '#FFD0D0'] ]\n");
+			builder.append("},\n");
+			builder.append("plotBackgroundImage: null,\n");
+			builder.append("height: 150\n");
+			builder.append("},\n");
+			builder.append("credits: { enabled: false },\n");
+			builder.append("title: { text: '' },\n");
+			builder.append("tooltip: { enabled: false },\n");
+			builder.append("pane: [{\n");
+			builder.append("startAngle: -45, endAngle: 45,\n");
+			builder.append("background: null,\n");
+			builder.append("center: ['50%', '145%'],\n");
+			builder.append("size: 250\n");
+			builder.append("}],\n");
+			builder.append("yAxis: [{\n");
+			builder.append("min: 0.00, max: 1.00,\n");
+			builder.append("minorTickPosition: 'outside',\n");
+			builder.append("tickPosition: 'outside',\n");
+			builder.append("labels: { rotation: 'auto', distance: 20 },\n");
+			builder.append("plotBands: [{\n");
+			builder.append("from: 0.00, to: 0.33,\n");
+			builder.append("color: '#C11B17',\n");
+			builder.append("innerRadius: '100%',\n");
+			builder.append("outerRadius: '102%'\n");
+			builder.append("}, {\n");
+			builder.append("from: 0.67, to: 1.00,\n");
+			builder.append("color: '#347C17',\n");
+			builder.append("innerRadius: '100%',\n");
+			builder.append("outerRadius: '102%'\n");
+			builder.append("}],\n");
+			builder.append("pane: 0,\n");
+			builder.append("title: {\n");
+			builder.append(String.format("text : '<br/>%s<br/><span style=\"font-size:8px\">%s</span>',\n", shortname,
+					name));
+			builder.append("y : -40\n");
+			builder.append("}\n");
+			builder.append("}],\n");
+			builder.append("plotOptions: {\n");
+			builder.append("gauge: {\n");
+			builder.append("dataLabels: { enabled: false },\n");
+			builder.append("dial: { radius: '100%' }\n");
+			builder.append("}\n");
+			builder.append("},\n");
+			builder.append("series: [{\n");
+			builder.append(String.format("data: [%.2f],\n", value));
+			builder.append("yAxis: 0\n");
+			builder.append("}]\n");
+			builder.append("});\n");
+			builder.append("});\n");
+			builder.append("</script>\n");
+			builder.append(String.format("<div id=\"graphWeaks_%d_%d\" style=\"width: 250px; height: 150px; margin: 0 auto\"></div>\n\n", index, i));
+			builder.append("</div>\n");
+			i += 1;
+		}
+		builder.append("</div>\n");
+		assert invariant() : "Illegal state in Solution.getVUMeter(int)";
+		return builder.toString();
+	}
+
 	public String getSelect(int index) {
 		if (scenarios == null)
 			scenarios = output.getPlansList();
@@ -600,5 +905,5 @@ public class Solution {
 		assert invariant() : "Illegal state in Solution.getSelect(int)";
 		return result;
 	}
-	
+
 }

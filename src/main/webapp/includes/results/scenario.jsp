@@ -5,6 +5,27 @@
 	Solution solution = (Solution) request.getAttribute("solution");
 %>
 
+<script type="text/javascript">
+	<% out.println(solution.getVUMeter(index)); %>
+	function showReceptors<%=index%>() {
+		<% out.println(Wrapper.MAP_RECEPTORS); %>
+        var selectedOption = $('#receptorsList<%=index%> option:selected');
+        var selectedValue = parseFloat(selectedOption.val());
+        var selectedText = selectedOption.text();
+    	var chart = $('#graphReceptors<%=index%>').highcharts();
+        chart.yAxis[0].update({
+            title: {
+				text: receptors[selectedText] + '<br/><span style="font-size:8px">' + selectedText + '</span>',
+				y : -40
+			}
+        });
+        chart.series[0].data[0].update(selectedValue);
+        chart.setTitle({
+            text: selectedText
+        });
+	}
+</script>
+
 <div class="tabbable">
 	<ul class="nav nav-tabs nav-tabs-border">
 		<li class="active"><a href="#receptors<%=index%>"
@@ -17,27 +38,15 @@
 	<div class="tab-content">
 		<div class="tab-pane tab-pane-welled tab-pane-border active"
 			id="receptors<%=index%>">
-			<!--p>This is a placeholder for a graph. Either the content and the tab label are temporary.</p-->
-
-			<div class="row-fluid">
-				<div class="span4 text-center">qwerty</div>
-				<div class="span4 text-center">asdfgh</div>
-				<div class="span4 text-center">zxcvbn</div>
-			</div>
-
+			<% out.println(solution.getStrongRecs(index)); %>
 			<div class="row-fluid">
 				<div class="span12 text-center">
-					<div id="graphReceptor<%=index%>"
-						style="width: 500px; height: 400px; margin: 0 auto"></div>
+					<div id="graphReceptors<%=index%>"
+						style="width: 600px; height: 300px; margin: 0 auto"></div>
 					<br/><%=solution.getSelect(index)%>
 				</div>
 			</div>
-
-			<div class="row-fluid">
-				<div class="span4 text-center">tyuiop</div>
-				<div class="span4 text-center">fghjkl</div>
-				<div class="span4 text-center">xcvbnm</div>
-			</div>
+			<% out.println(solution.getWeakRecs(index)); %>
 		</div>
 		<div class="tab-pane tab-pane-welled tab-pane-border"
 			id="sources<%=index%>">

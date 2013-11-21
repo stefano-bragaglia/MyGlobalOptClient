@@ -156,9 +156,12 @@ public class Wrapper {
 		Range range;
 		double value;
 		StringBuilder builder = new StringBuilder();
-		builder.append(String.format("<p><small>Select receptor:</small><select class=\"span5\" id=\"receptorsList%d>\n", index));
+		builder.append(String
+				.format("<p><small>Select receptor:</small>&nbsp;<select class=\"span5\" id=\"receptorsList%d\" onchange=\"showReceptors%d()\">\n",
+						index, index));
 		Receptor[] receptors = Receptor.getReceptorList(locale);
 		Arrays.sort(receptors, new NameComparator());
+		boolean first = true;
 		for (Receptor receptor : receptors) {
 			name = receptor.getName();
 			range = BOUNDS.get(receptor.convertLocale(Helper.ENG).getName());
@@ -175,7 +178,9 @@ public class Wrapper {
 			if (Double.NaN != value && 1.0 < value)
 				value = 1.0;
 			// end of hack
-			builder.append(String.format("<option value=\"%.2f\">%s</option>\n", value, name));
+			builder.append(String.format("<option value=\"%.2f\"%s>%s</option>\n", //
+					value, (first ? " selected=\"selected\"" : ""), name));
+			first = false;
 		}
 		builder.append("</select></p>\n");
 		return builder.toString();
