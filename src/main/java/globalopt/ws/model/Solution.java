@@ -4,7 +4,6 @@
 package globalopt.ws.model;
 
 import globalopt.ws.model.service.Objective;
-import globalopt.ws.model.service.Ranges;
 import globalopt.ws.model.service.graphs.Comparison;
 import globalopt.ws.model.service.graphs.Costs;
 import globalopt.ws.model.service.graphs.Electrics;
@@ -36,56 +35,6 @@ import org.stringtemplate.v4.STGroupDir;
  * 
  */
 public class Solution {
-
-	// private static final
-	//
-	// 1. 'Limitaz.subsidenza e stabilita` falde': -6179.706528397277
-	// 1. 'Limitaz.subsidenza e stabilita` falde': 1298.6177968749998
-	// 2. 'Stabilita` di versanti e scarpate': -314529.68046351173
-	// 2. 'Stabilita` di versanti e scarpate': -2786.1958937499994
-	// 3. 'Stabilita` di litorali o fondali mare': -37043.1857098924
-	// 3. 'Stabilita` di litorali o fondali mare': -183.05586875000003
-	// 4. 'Stabilita` di rive o alvei fluviali': -130433.2301006342
-	// 4. 'Stabilita` di rive o alvei fluviali': -1096.6462500000005
-	// 5. 'Qualita` pedologica di suoli': -305557.5722811347
-	// 5. 'Qualita` pedologica di suoli': -2899.6204437499996
-	// 6. 'Qualita` mare': -189023.0388695859
-	// 6. 'Qualita` mare': -1357.8259375000002
-	// 7. 'Qualita` acque interne superficiali': -329369.4203612669
-	// 7. 'Qualita` acque interne superficiali': -2333.7355374999993
-	// 8. 'Qualita` acque sotterranee': -459370.35666489246
-	// 8. 'Qualita` acque sotterranee': -3671.23493125
-	// 9. 'Qualita` atmosfera': -424068.2229526892
-	// 9. 'Qualita` atmosfera': 73.14381250000073
-	// 10. 'Qualita` clima': -154583.90628334114
-	// 10. 'Qualita` clima': 2923.720481249999
-	// 11. 'Benessere vegetazione terrestre': -651403.2122003649
-	// 11. 'Benessere vegetazione terrestre': -4845.85731875
-	// 12. 'Benessere fauna terrestre': -862655.8001683186
-	// 12. 'Benessere fauna terrestre': -7144.56509375
-	// 13. 'Beness.biocenosi acquatic. e palustri': -676752.3578627767
-	// 13. 'Beness.biocenosi acquatic. e palustri': -5367.547524999998
-	// 14. 'Benessere e salute uomo': -32410.868368519634
-	// 14. 'Benessere e salute uomo': 12714.614037500001
-	// 15. 'Qualita` di paesaggi sensibili': -898461.7415429621
-	// 15. 'Qualita` di paesaggi sensibili': -8557.805681250002
-	// 16. 'Valore beni culturali e/o storici': -561651.3476453229
-	// 16. 'Valore beni culturali e/o storici': -5948.834937499999
-	// 17. 'Accessibilita` di risorse per lo svago': -100973.66962237039
-	// 17. 'Accessibilita` di risorse per lo svago': -114.71320312499998
-	// 18. 'Disponibilita` risorse idriche': -431061.0537254023
-	// 18. 'Disponibilita` risorse idriche': -3166.68959375
-	// 19. 'Disponibilita` agronomica di suoli fertili': -376675.02008478047
-	// 19. 'Disponibilita` agronomica di suoli fertili': -3429.1998812500005
-	// 20. 'Disponibilita` risorse litoidi': 740.2063062499999
-	// 20. 'Disponibilita` risorse litoidi': 76969.6279755807
-	// 21. 'Disponibilita` energia': -15711.461196872733
-	// 21. 'Disponibilita` energia': 3559.836125
-	// 22. 'Disponibilita` risorse produttive': 12266.206437500003
-	// 22. 'Disponibilita` risorse produttive': 999999.9999999986
-	// 23. 'Valore di opere e di beni materiali': 9943.904118750002
-	// 23. 'Valore di opere e di beni materiali': 761471.1472190408
-	//
 
 	private String[] boundaries;
 
@@ -128,35 +77,26 @@ public class Solution {
 
 	private String[] transitionals;
 
-	private Ranges ranges;
-
 	/**
 	 * Default constructor.
 	 * 
 	 * @param time
 	 *            the computing time of the query
 	 */
-	public Solution(GOParetoInputParam params, GOParetoOutput output, Ranges ranges, long time) {
+	public Solution(GOParetoInputParam params, GOParetoOutput output, long time) {
 		if (params == null)
 			throw new IllegalArgumentException(
-					"Illegal 'params' argument in Solution(GOParetoInputParam, GOParetoOutput, Ranges, long): "
-							+ params);
+					"Illegal 'params' argument in Solution(GOParetoInputParam, GOParetoOutput, long): " + params);
 		if (output == null)
 			throw new IllegalArgumentException(
-					"Illegal 'output' argument in Solution(GOParetoInputParam, GOParetoOutput, Ranges, long): "
-							+ output);
-		if (ranges == null)
-			throw new IllegalArgumentException(
-					"Illegal 'ranges' argument in Solution(GOParetoInputParam, GOParetoOutput, Ranges, long): "
-							+ ranges);
+					"Illegal 'output' argument in Solution(GOParetoInputParam, GOParetoOutput, long): " + output);
 		if (time < 0)
 			throw new IllegalArgumentException(
-					"Illegal 'time' argument in Solution(GOParetoInputParam, GOParetoOutput, Ranges, long): " + time);
+					"Illegal 'time' argument in Solution(GOParetoInputParam, GOParetoOutput, long): " + time);
 		this.params = params;
 		this.output = output;
-		this.ranges = ranges;
 		this.time = time;
-		assert invariant() : "Illegal state in Solution(GOParetoInputParam, GOParetoOutput, Ranges, long)";
+		assert invariant() : "Illegal state in Solution(GOParetoInputParam, GOParetoOutput, long)";
 	}
 
 	public String getBoundaries() {
@@ -650,4 +590,15 @@ public class Solution {
 		return result;
 	}
 
+	public String getSelect(int index) {
+		if (scenarios == null)
+			scenarios = output.getPlansList();
+		if (index < 0 || index >= scenarios.length)
+			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getSelect(int): " + index);
+		Locale locale = scenarios[index].getMylocale();
+		String result = Wrapper.listSelect(locale, index, scenarios[index]);
+		assert invariant() : "Illegal state in Solution.getSelect(int)";
+		return result;
+	}
+	
 }

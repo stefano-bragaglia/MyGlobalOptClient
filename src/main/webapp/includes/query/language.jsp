@@ -1,8 +1,9 @@
 <%@ page import="java.util.Locale" %>
+<%@ page import="globalopt.ws.model.Helper" %>
 <%@ page import="globalopt.ws.model.Wrapper" %>
 <script type="text/javascript"> 
 	function checkLanguage() {
-		<% out.println(Wrapper.MAP_ENG_ITA); %>
+		<% out.println(Wrapper.MAP_ACTIVITIES); %>
 		$('#groupLanguage').removeClass("error");
 		$('#groupLanguage').removeClass("warning");
 		$('#groupLanguage').removeClass("success");
@@ -34,8 +35,8 @@
 			$('#helpElectric3').text('electric');
 			$('#helpThermal2').text('thermal');
 			$('#helpThermal3').text('thermal');
-			$('#helpSources').html(<% out.print("\"" + Wrapper.getInstance().listSources(Wrapper.ENG) + "\""); %>);
-			$('#helpReceptors').html(<% out.print("\"" + Wrapper.getInstance().listReceptors(Wrapper.ENG) + "\""); %>);
+			$('#helpSources').html(<% out.print("\"" + Wrapper.listSources(Helper.ENG) + "\""); %>);
+			$('#helpReceptors').html(<% out.print("\"" + Wrapper.listReceptors(Helper.ENG) + "\""); %>);
 			return true;
 			break;
 		case "it":
@@ -65,8 +66,8 @@
 			$('#helpElectric3').text('elettrica');			
 			$('#helpThermal2').text('termica');
 			$('#helpThermal3').text('termica');
-			$('#helpSources').html(<% out.print("\"" + Wrapper.getInstance().listSources(Wrapper.ITA) + "\""); %>);
-			$('#helpReceptors').html(<% out.print("\"" + Wrapper.getInstance().listReceptors(Wrapper.ITA) + "\""); %>);
+			$('#helpSources').html(<% out.print("\"" + Wrapper.listSources(Helper.ITA) + "\""); %>);
+			$('#helpReceptors').html(<% out.print("\"" + Wrapper.listReceptors(Helper.ITA) + "\""); %>);
 			return true;
 			break;
 		default:

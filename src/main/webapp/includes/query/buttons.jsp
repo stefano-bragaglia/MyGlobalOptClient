@@ -9,7 +9,7 @@
 		return res1 && res2 && res3 && res4;
 	}
 	function load() {
-<%out.println(Wrapper.MAP_ENG_ITA);%>
+<%out.println(Wrapper.MAP_ACTIVITIES);%>
 	var constrs = 'min_max_source("Thermoelectric Biomass Plants",735,2940)\n'
 				+ 'min_max_source("Photovoltaic Plants",885,4540)\n'
 				+ 'min_max_source("Methane-based Thermoelectric Plants",0,0)\n'

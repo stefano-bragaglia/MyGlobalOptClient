@@ -64,7 +64,7 @@ $(function () {
 
 
 $(function () {
-	$('#graphReceptor?pos?').highcharts({
+	$('#graphReceptor').highcharts({
 	
 	    chart: {
 	        type: 'gauge',
@@ -72,13 +72,13 @@ $(function () {
 	        plotBackgroundColor: {
 	        	linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
 	        	stops: [
-	        		[0, '#F8F8F8'],
+	        		[0, '#F0F0F0'],
 	        		[0.3, '#FFFFFF'],
-	        		[1, '#F8F8F8']
+	        		[1, '#F0F0F0']
 	        	]
 	        },
 	        plotBackgroundImage: null,
-	        height: 200
+	        height: 300
 	    },
         
         credits: {
@@ -86,7 +86,7 @@ $(function () {
         },
 	
 	    title: {
-	        text: '?name?'
+	        text: 'Qualita` atmosfera'
 	    },
         
         tooltip: {
@@ -97,8 +97,8 @@ $(function () {
 	        startAngle: -45,
 	        endAngle: 45,
 	        background: null,
-	        center: ['50%', '145%'],
-	        size: 300
+	        center: ['50%', '155%'],
+	        size: 600
 	    }],	    		        
 	
 	    yAxis: [{
@@ -111,17 +111,17 @@ $(function () {
 	        	distance: 20
 	        },
 	        plotBands: [{
-	        	from: -20,
-	        	to: -11,
-	        	color: '#FF9999',
+	        	from: 0.00,
+	        	to: 0.33,
+	        	color: '#C11B17',
 	        	innerRadius: '100%',
-	        	outerRadius: '105%'
+	        	outerRadius: '102%'
 	        }, {
-	        	from: -2,
-	        	to: 7,
-	        	color: '#99FF99',
+	        	from: 0.66,
+	        	to: 1.00,
+	        	color: '#347C17',
 	        	innerRadius: '100%',
-	        	outerRadius: '105%'
+	        	outerRadius: '102%'
 	        }],
 	        pane: 0,
 	        title: {
@@ -142,7 +142,7 @@ $(function () {
 	    },
 
 	    series: [{
-	        data: [-12],
+	        data: [0.72],
 	        yAxis: 0
 	    }]
 		

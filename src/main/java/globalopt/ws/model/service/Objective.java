@@ -7,12 +7,14 @@ import globalopt.ws.model.Helper;
 import globalopt.ws.model.InvokeBuilder;
 import globalopt.ws.model.ParetoBuilder;
 import globalopt.ws.model.Proxy;
+import globalopt.ws.model.Wrapper;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.PrimaryActivity.ActivityType;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.Receptor;
 import it.unibo.ai.ePolicy.GlobalOpt.IO.Output.GlobalOptOutput;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -25,7 +27,9 @@ public class Objective {
 		COST, ELECTRIC, RECEPTOR, THERMAL, UNKNOWN
 	}
 
-	private static final String CONSTRS = "min_max_source(\"Centrali termoelettriche a biomassa\",735,2940)\nmin_max_source(\"Impianti fotovoltaici\",885,4540)\nmin_max_source(\"Centrali termoelettriche a metano\",0,0)\nmin_max_source(\"Centrali termoelettriche a olio\",0,0)\nmin_max_source(\"Centrali termoelettriche a carbone\",0,0)\nmin_max_source(\"Centrali idroelettriche\",0,0)\nmin_max_source(\"Centrale mini-idroelettrica\",15,60)\nmin_max_source(\"Aerogeneratori\",115,560)\nmin_max_source(\"Impianti solari termodinamici\",15,60)\nmin_max_source(\"Impianti geotermici superficiali\",0,0)\nmin_max_source(\"Centrali termoelettriche a biomassa\",0,0)\nmin_max_source(\"Pannelli solari termici\",0,0)";
+	// private static final String CONSTRS =
+	// "min_max_source(\"Centrali termoelettriche a biomassa\",735,2940)\nmin_max_source(\"Impianti fotovoltaici\",885,4540)\nmin_max_source(\"Centrali termoelettriche a metano\",0,0)\nmin_max_source(\"Centrali termoelettriche a olio\",0,0)\nmin_max_source(\"Centrali termoelettriche a carbone\",0,0)\nmin_max_source(\"Centrali idroelettriche\",0,0)\nmin_max_source(\"Centrale mini-idroelettrica\",15,60)\nmin_max_source(\"Aerogeneratori\",115,560)\nmin_max_source(\"Impianti solari termodinamici\",15,60)\nmin_max_source(\"Impianti geotermici superficiali\",0,0)\nmin_max_source(\"Centrali termoelettriche a biomassa\",0,0)\nmin_max_source(\"Pannelli solari termici\",0,0)";
+	private static final String CONSTRS = "min_max_source(\"Big Hydroelectric Plants\",0,0)\nmin_max_source(\"Biomass-based Thermal Plants\",0,0)\nmin_max_source(\"Carbon-based Thermoelectric Plants\",0,0)\nmin_max_source(\"Methane-based Thermoelectric Plants\",0,0)\nmin_max_source(\"Oil-based Thermoelectric Plants\",0,0)\nmin_max_source(\"Photovoltaic Plants\",885,4540)\nmin_max_source(\"Small Hydroelectric Plants\",15,60)\nmin_max_source(\"Solar Thermal Panels\",0,0)\nmin_max_source(\"Superficial Geothermal Plants\",0,0)\nmin_max_source(\"Thermodynamic Solar Plants\",15,60)\nmin_max_source(\"Thermoelectric Biomass Plants\",735,2940)\nmin_max_source(\"Windmill Electrical Generators\",115,560)\n";
 	private static final String COST = "cost";
 	private static final String COSTO = "costo";
 	private static final String ELECTRIC = "electric";
@@ -45,13 +49,17 @@ public class Objective {
 	 */
 	public static void main(String[] args) {
 		try {
+//			Map<String, Range> bounds = new HashMap<String, Range>();
+			
 			Objective o;
 			GlobalOptOutput out;
 			InvokeBuilder invoke;
-			ParetoBuilder pareto = new ParetoBuilder().setLocale("it").setConstraints(CONSTRS);
+			ParetoBuilder pareto = new ParetoBuilder().setLocale("en").setConstraints(CONSTRS);
 			Locale locale = pareto.getLocale();
 			int i = 1;
-			for (Receptor r : Receptor.getReceptorList(locale)) {
+			Receptor[] receptors = Receptor.getReceptorList(locale);
+			Arrays.sort(receptors, new Wrapper.RComparator());
+			for (Receptor r : receptors) {
 				invoke = pareto.stem().setFunction(MIN + r.getShortName() + PAR);
 				out = Proxy.getInstance().invoke(invoke.build());
 				o = new Objective(invoke.getFunction(), locale);
@@ -62,9 +70,12 @@ public class Objective {
 				o = new Objective(invoke.getFunction(), locale);
 				System.out.println(i + ". " + o.toString() + ": "
 						+ out.getImpacts().computeTotalRecByShortName(r.getShortName(), locale) + " " + o.getUnit());
+				
+//				bounds.put(key, value)
+				
 				i += 1;
-//				if (i > 3)
-//					break;
+				// if (i > 3)
+				// break;
 			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

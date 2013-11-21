@@ -3,11 +3,8 @@ package globalopt.ws.client;
 import globalopt.ws.model.Helper;
 import globalopt.ws.model.ParetoBuilder;
 import globalopt.ws.model.Solution;
-import globalopt.ws.model.service.Ranges;
 
 import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -62,25 +59,25 @@ public class Servlet extends HttpServlet {
 		if (computations == null)
 			computations = 0;
 
-		@SuppressWarnings("unchecked")
-		Map<Integer, Ranges> contexts = (Map<Integer, Ranges>) session.getAttribute("contexts");
-		if (contexts == null)
-			contexts = new Hashtable<Integer, Ranges>();
-		Ranges context = contexts.get(builder.hashCode());
-		if (context == null) {
-			try {
-				context = new Ranges(builder);
-			} catch (InterruptedException e) {
-				throw new ServletException(e);
-			}
-			contexts.put(context.getHash(), context);
-		}
+//		@SuppressWarnings("unchecked")
+//		Map<Integer, Ranges> contexts = (Map<Integer, Ranges>) session.getAttribute("contexts");
+//		if (contexts == null)
+//			contexts = new Hashtable<Integer, Ranges>();
+//		Ranges context = contexts.get(builder.hashCode());
+//		if (context == null) {
+//			try {
+//				context = new Ranges(builder);
+//			} catch (InterruptedException e) {
+//				throw new ServletException(e);
+//			}
+//			contexts.put(context.getHash(), context);
+//		}
 
-		Solution solution = Helper.compute(builder, context);
+		Solution solution = Helper.compute(builder);
 		computations += 1;
 
 		session.setAttribute("computations", computations);
-		session.setAttribute("contexts", contexts);
+//		session.setAttribute("contexts", contexts);
 
 		request.setAttribute("computations", computations);
 		request.setAttribute("timestamp", solution.getDuration());

@@ -7,7 +7,7 @@
 			<div class="well">
 				<!-- p>Form section.</p -->
 				<form class="form-horizontal" method="post">
-					
+
 					<fieldset>
 						<legend>Energy Scenario Evaluation</legend>
 						<%@include file="query/language.jsp"%>
@@ -28,6 +28,8 @@
 								<div class="progress progress-striped active" id="progressBar">
 									<div class="bar" style="width: 100%;"></div>
 								</div>
+								<p class="muted text-right"><small>N.B.: the computation may take
+									longer when a constraints set is queried for the first time.</small></p>
 							</div>
 							<div class="modal-footer">
 								<!-- button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -50,27 +52,31 @@
 					<ul>
 						<li><small><i><span class="text-success">min_max_source(Source,
 										MinValue, MaxValue)</span></i></small></li>
-						<li><small>
-							<i><span class="text-success" id="helpCost1">cost</span> <span class="text-success">&gt;=</span> 
-							   <span class="text-success" id="helpElectric1">electric</span></i> 
-							   (or similar using 
-						<i><span class="text-success" id="helpCost2">cost</span></i>,
-						<i><span class="text-success" id="helpElectric2">electric</span></i>
-						or <i><span class="text-success" id="helpThermal2">thermal</span></i>)</small></li>
-					</ul> <small>where <i>Source</i> is the key for a <span class="text-info">source</span>
-						(see the references below)</small>
-				</li>
+						<li><small> <i><span class="text-success"
+									id="helpCost1">cost</span> <span class="text-success">&gt;=</span>
+									<span class="text-success" id="helpElectric1">electric</span></i>
+								(or similar using <i><span class="text-success"
+									id="helpCost2">cost</span></i>, <i><span class="text-success"
+									id="helpElectric2">electric</span></i> or <i><span
+									class="text-success" id="helpThermal2">thermal</span></i>)
+						</small></li>
+					</ul> <small>where <i>Source</i> is the key for a <span
+						class="text-info">source</span> (see the references below)
+				</small></li>
 				<li><strong>Objective functions:</strong> list one or more
 					objectives to optimise
 					<ul>
 						<li><small><i><span class="text-success">max(Term)</span></i>
 								or <i><span class="text-success">min(Term)</span></i></small></li>
-					</ul><small>where <i>Term</i> is either <i><span
+					</ul>
+					<small>where <i>Term</i> is either <i><span
 							class="text-success" id="helpCost3">cost</span></i>, <i><span
 							class="text-success" id="helpElectric3">electric</span></i>, <i><span
 							class="text-success" id="helpThermal3">thermal</span></i> or the key
-						for a <span class="text-info">receptor</span> (see the references below)</small></li>
-				
+						for a <span class="text-info">receptor</span> (see the references
+						below)
+				</small></li>
+
 				<li><strong>No of scenarios:</strong> tell the amount of
 					desired scenarios to compare</li>
 			</ol>
@@ -92,7 +98,7 @@
 							The following <strong>sources</strong> are available:
 						</p>
 						<div class="row-fluid help-inline" id="helpSources">
-							<%=Wrapper.getInstance().listSources()%>
+							<%=Wrapper.listSources()%>
 						</div>
 					</div>
 					<div class="tab-pane tab-pane-border" id="receptorList">
@@ -100,7 +106,7 @@
 							The following <strong>receptors</strong> are available:
 						</p>
 						<div class="row-fluid help-inline" id="helpReceptors">
-							<%=Wrapper.getInstance().listReceptors()%>
+							<%=Wrapper.listReceptors()%>
 						</div>
 					</div>
 				</div>
