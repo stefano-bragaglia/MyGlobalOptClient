@@ -660,8 +660,7 @@ public class Solution {
 		builder.append("}],\n");
 		builder.append("pane: 0,\n");
 		builder.append("title: {\n");
-		builder.append(String.format("text : '%s<br/><span style=\"font-size:8px\">%s</span>',\n", shortname,
-				name));
+		builder.append(String.format("text : '%s<br/><span style=\"font-size:8px\">%s</span>',\n", shortname, name));
 		builder.append("y : -40\n");
 		builder.append("}\n");
 		builder.append("}],\n");
@@ -681,47 +680,45 @@ public class Solution {
 		return builder.toString();
 	}
 
-	private TreeMap<Double, Receptor> ranking;
-
 	public String getStrongRecs(int index) {
 		if (scenarios == null)
 			scenarios = output.getPlansList();
 		if (index < 0 || index >= scenarios.length)
 			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getVUMeter(int): " + index);
-		if (ranking == null) {
-			double value;
-			Range range;
-			Locale locale = scenarios[index].getMylocale();
-			Receptor[] receptors = Receptor.getReceptorList(locale);
-			ranking = new TreeMap<Double, Receptor>();
-			for (Receptor receptor : receptors) {
-				range = Wrapper.BOUNDS.get(receptor.convertLocale(Helper.ENG).getName());
-				if (null == range || 0 == range.getDelta())
-					value = Double.NaN;
-				else {
-					value = scenarios[index].getImpacts().computeTotalRecByShortName(receptor.getShortName(), locale);
-					value = (value - range.getMin()) / range.getDelta();
-				}
-				// Shouldn't happen, if so it is because of the different
-				// constraints: hack follows.
-				if (Double.NaN != value && 0.0 > value)
-					value = 0.0;
-				if (Double.NaN != value && 1.0 < value)
-					value = 1.0;
-				// end of hack
-				ranking.put(value, receptor);
+		// if (ranking == null) {
+		double value;
+		Range range;
+		Locale locale = scenarios[index].getMylocale();
+		Receptor[] receptors = Receptor.getReceptorList(locale);
+		TreeMap<Double, Receptor> ranking = new TreeMap<Double, Receptor>();
+		for (Receptor receptor : receptors) {
+			range = Wrapper.BOUNDS.get(receptor.convertLocale(Helper.ENG).getName());
+			if (null == range || 0 == range.getDelta())
+				value = Double.NaN;
+			else {
+				value = scenarios[index].getImpacts().computeTotalRecByShortName(receptor.getShortName(), locale);
+				value = (value - range.getMin()) / range.getDelta();
 			}
+			// Shouldn't happen, if so it is because of the different
+			// constraints: hack follows.
+			if (Double.NaN != value && 0.0 > value)
+				value = 0.0;
+			if (Double.NaN != value && 1.0 < value)
+				value = 1.0;
+			// end of hack
+			ranking.put(value, receptor);
 		}
+		// }
 		int i = 0;
 		StringBuilder builder = new StringBuilder();
 		builder.append("<div class=\"row-fluid\">\n");
 		Iterator<Entry<Double, Receptor>> iterator = ranking.descendingMap().entrySet().iterator();
 		while (iterator.hasNext() && i < 3) {
 			Entry<Double, Receptor> current = iterator.next();
-			double value = current.getKey();
+			value = current.getKey();
 			String name = current.getValue().getName();
 			String shortname = current.getValue().getShortName();
-			builder.append("<div class=\"span4 text-center\">\n\n");			
+			builder.append("<div class=\"span4 text-center\">\n\n");
 			builder.append("<script type=\"text/javascript\">\n");
 			builder.append("$(function () {\n");
 			builder.append(String.format("$('#graphStrongs_%d_%d').highcharts({\n", index, i));
@@ -780,7 +777,9 @@ public class Solution {
 			builder.append("});\n");
 			builder.append("});\n");
 			builder.append("</script>\n");
-			builder.append(String.format("<div id=\"graphStrongs_%d_%d\" style=\"width: 250px; height: 150px; margin: 0 auto\"></div>\n\n", index, i));
+			builder.append(String.format(
+					"<div id=\"graphStrongs_%d_%d\" style=\"width: 250px; height: 150px; margin: 0 auto\"></div>\n\n",
+					index, i));
 			builder.append("</div>\n");
 			i += 1;
 		}
@@ -794,40 +793,41 @@ public class Solution {
 			scenarios = output.getPlansList();
 		if (index < 0 || index >= scenarios.length)
 			throw new IndexOutOfBoundsException("Index 'index' out of bounds in Solution.getVUMeter(int): " + index);
-		if (ranking == null) {
-			double value;
-			Range range;
-			Locale locale = scenarios[index].getMylocale();
-			Receptor[] receptors = Receptor.getReceptorList(locale);
-			ranking = new TreeMap<Double, Receptor>();
-			for (Receptor receptor : receptors) {
-				range = Wrapper.BOUNDS.get(receptor.convertLocale(Helper.ENG).getName());
-				if (null == range || 0 == range.getDelta())
-					value = Double.NaN;
-				else {
-					value = scenarios[index].getImpacts().computeTotalRecByShortName(receptor.getShortName(), locale);
-					value = (value - range.getMin()) / range.getDelta();
-				}
-				// Shouldn't happen, if so it is because of the different
-				// constraints: hack follows.
-				if (Double.NaN != value && 0.0 > value)
-					value = 0.0;
-				if (Double.NaN != value && 1.0 < value)
-					value = 1.0;
-				// end of hack
-				ranking.put(value, receptor);
+		// if (ranking == null) {
+		double value;
+		Range range;
+		Locale locale = scenarios[index].getMylocale();
+		Receptor[] receptors = Receptor.getReceptorList(locale);
+		TreeMap<Double, Receptor> ranking = new TreeMap<Double, Receptor>();
+		for (Receptor receptor : receptors) {
+			range = Wrapper.BOUNDS.get(receptor.convertLocale(Helper.ENG).getName());
+			if (null == range || 0 == range.getDelta())
+				value = Double.NaN;
+			else {
+				value = scenarios[index].getImpacts().computeTotalRecByShortName(receptor.getShortName(), locale);
+				value = (value - range.getMin()) / range.getDelta();
 			}
+			// Shouldn't happen, if so it is because of the different
+			// constraints: hack follows.
+			if (Double.NaN != value && 0.0 > value)
+				value = 0.0;
+			if (Double.NaN != value && 1.0 < value)
+				value = 1.0;
+			// end of hack
+			System.out.println(">> value: " + value + ", " + receptor.getShortName() + ":" + receptor.getName());
+			ranking.put(value, receptor);
 		}
+		// }
 		int i = 0;
 		StringBuilder builder = new StringBuilder();
 		builder.append("<div class=\"row-fluid\">\n");
 		Iterator<Entry<Double, Receptor>> iterator = ranking.entrySet().iterator();
 		while (iterator.hasNext() && i < 3) {
 			Entry<Double, Receptor> current = iterator.next();
-			double value = current.getKey();
+			value = current.getKey();
 			String name = current.getValue().getName();
 			String shortname = current.getValue().getShortName();
-			builder.append("<div class=\"span4 text-center\">\n\n");			
+			builder.append("<div class=\"span4 text-center\">\n\n");
 			builder.append("<script type=\"text/javascript\">\n");
 			builder.append("$(function () {\n");
 			builder.append(String.format("$('#graphWeaks_%d_%d').highcharts({\n", index, i));
@@ -886,7 +886,9 @@ public class Solution {
 			builder.append("});\n");
 			builder.append("});\n");
 			builder.append("</script>\n");
-			builder.append(String.format("<div id=\"graphWeaks_%d_%d\" style=\"width: 250px; height: 150px; margin: 0 auto\"></div>\n\n", index, i));
+			builder.append(String.format(
+					"<div id=\"graphWeaks_%d_%d\" style=\"width: 250px; height: 150px; margin: 0 auto\"></div>\n\n",
+					index, i));
 			builder.append("</div>\n");
 			i += 1;
 		}
