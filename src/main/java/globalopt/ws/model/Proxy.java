@@ -64,7 +64,7 @@ public class Proxy implements GlobalOptWSSEI {
 		httpConduit.getClient().setReceiveTimeout(1000 * 60 * 30);
 		System.out.println(">> Service: " + nameService);
 		System.out.println(">> Port:    " + namePort);
-		System.out.println(">> URL:     " + new URL(Connector.WSDL));
+		System.out.println(">> WSDL:    " + new URL(Connector.WSDL));
 		assert invariant() : "Illegal state in Proxy()";
 	}
 

@@ -2,13 +2,16 @@ globalopt/ws/model/Proxy.class
 globalopt/ws/model/service/Objective$Kind.class
 globalopt/ws/client/Servlet.class
 globalopt/ws/model/Wrapper$NameComparator.class
+globalopt/ws/model/service/graphs/OtherPollutants.class
 globalopt/ws/model/service/Objective$1.class
 globalopt/ws/model/Solution.class
 globalopt/ws/model/ParetoBuilder.class
 globalopt/ws/model/Helper.class
 globalopt/ws/model/Connector.class
 globalopt/ws/model/service/Objective.class
+globalopt/ws/model/service/graphs/GreenhouseGases.class
 globalopt/ws/model/service/RecData$NormalComparator.class
+globalopt/ws/model/service/graphs/HeavyMetals.class
 globalopt/ws/model/service/Range.class
 globalopt/ws/model/service/graphs/Comparison.class
 globalopt/ws/model/service/graphs/Electrics.class

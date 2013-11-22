@@ -1,22 +1,19 @@
 
 <div class="tabbable">
 	<ul class="nav nav-tabs nav-tabs-border">
-		<li class="active"><a href="#solid" data-toggle="tab">Solid pollutants</a></li>
-		<li><a href="#gas" data-toggle="tab">Gaseous pollutants</a></li>
-		<li><a href="#other" data-toggle="tab">Other pollutants</a></li>
+		<li class="active"><a href="#metals" data-toggle="tab">Heavy metals</a></li>
+		<li><a href="#gases" data-toggle="tab">Greenhouse gases</a></li>
+		<li><a href="#others" data-toggle="tab">Other pollutants</a></li>
 	</ul>
 	<div class="tab-content">
-		<div class="tab-pane tab-pane-welled tab-pane-border active" id="solid">
-			<p>This is a placeholder for a graph. Either the content and the tab label are temporary.</p> 
-			<!--%@include file="graphs/comparison.jsp"%-->
+		<div class="tab-pane tab-pane-welled tab-pane-border active" id="metals">
+			<%@include file="graphs/metals.jsp"%>
 		</div>
-		<div class="tab-pane tab-pane-welled tab-pane-border" id="gas">
-			<p>This is a placeholder for a graph. Either the content and the tab label are temporary.</p> 
-			<!--%@include file="graphs/costs.jsp"%-->
+		<div class="tab-pane tab-pane-welled tab-pane-border" id="gases">
+			<%@include file="graphs/gases.jsp"%> 
 		</div>
-		<div class="tab-pane tab-pane-welled tab-pane-border" id="other">
-			<p>This is a placeholder for a graph. Either the content and the tab label are temporary.</p>
-			<!--%@include file="graphs/electrics.jsp"%-->
+		<div class="tab-pane tab-pane-welled tab-pane-border" id="others">
+			<%@include file="graphs/others.jsp"%>
 		</div>
 	</div>
 </div>

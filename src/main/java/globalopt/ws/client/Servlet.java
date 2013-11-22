@@ -93,7 +93,10 @@ public class Servlet extends HttpServlet {
 		request.setAttribute("costs.series", solution.getCosts().getSeries());
 		request.setAttribute("electrics.series", solution.getElectrics().getSeries());
 		request.setAttribute("thermals.series", solution.getThermals().getSeries());
-
+		request.setAttribute("metals.series", solution.getHeavyMetals().getSeries());
+		request.setAttribute("gases.series", solution.getGreenhouseGases().getSeries());
+		request.setAttribute("others.series", solution.getOtherPollutants().getSeries());
+		
 		request.setAttribute("scenarios", solution.names());
 		request.setAttribute("objectives", solution.objectives());
 		for (int o = 0; o < solution.dimensions(); o++)

@@ -8,6 +8,7 @@
 						{
 							chart : {
 								polar : true,
+								backgroundColor : '#FFFFFF',
 								type : 'line'
 							},
 							title : {

@@ -11,6 +11,9 @@ import globalopt.ws.model.service.graphs.Costs;
 import globalopt.ws.model.service.graphs.Electrics;
 import globalopt.ws.model.service.graphs.Functions;
 import globalopt.ws.model.service.graphs.Graph;
+import globalopt.ws.model.service.graphs.GreenhouseGases;
+import globalopt.ws.model.service.graphs.HeavyMetals;
+import globalopt.ws.model.service.graphs.OtherPollutants;
 import globalopt.ws.model.service.graphs.Thermals;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.Emission;
 import it.unibo.ai.ePolicy.GlobalOpt.Domain.Receptor;
@@ -123,7 +126,49 @@ public class Solution {
 		assert invariant() : "Illegal state in Solution.getComparison()";
 		return comparison;
 	}
+	
+	private Graph heavyMetals;
+	
+	/**
+	 * @return
+	 */
+	public Graph getHeavyMetals() {
+		if (heavyMetals == null) {
+			loadObjectives();
+			heavyMetals = new HeavyMetals(objectives, output.getPlansList());
+		}
+		assert invariant() : "Illegal state in Solution.getHeavyMetals()";
+		return heavyMetals;
+	}
 
+	private Graph greenhouseGases;
+	
+	/**
+	 * @return
+	 */
+	public Graph getGreenhouseGases() {
+		if (greenhouseGases == null) {
+			loadObjectives();
+			greenhouseGases = new GreenhouseGases(objectives, output.getPlansList());
+		}
+		assert invariant() : "Illegal state in Solution.getGreenhouseGases()";
+		return greenhouseGases;
+	}
+
+	private Graph otherPollutants;
+	
+	/**
+	 * @return
+	 */
+	public Graph getOtherPollutants() {
+		if (otherPollutants == null) {
+			loadObjectives();
+			otherPollutants = new OtherPollutants(objectives, output.getPlansList());
+		}
+		assert invariant() : "Illegal state in Solution.getOtherPollutants()";
+		return otherPollutants;
+	}
+	
 	/**
 	 * Returns the utility for the costs graph.
 	 * 
@@ -814,7 +859,6 @@ public class Solution {
 			if (Double.NaN != value && 1.0 < value)
 				value = 1.0;
 			// end of hack
-			System.out.println(">> value: " + value + ", " + receptor.getShortName() + ":" + receptor.getName());
 			ranking.put(value, receptor);
 		}
 		// }
