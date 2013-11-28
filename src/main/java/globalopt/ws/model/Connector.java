@@ -12,7 +12,7 @@ public class Connector {
 	/**
 	 * Internal flag to determine addresses.
 	 */
-	private static final boolean LOCAL = true;
+	private static final boolean LOCAL = false;
 
 	/**
 	 * The namespace of the Global Optimiser service.

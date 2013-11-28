@@ -330,7 +330,7 @@ public class Solution {
 			int b = params.getObjList().length;
 			transitionals = new String[output.getPlansList().length - b];
 			for (int i = 0; i < transitionals.length; i++)
-				transitionals[i] = (i + b) + ". Scenario";
+				transitionals[i] = (1 + i + b) + ". Scenario";
 		}
 		assert invariant() : "Illegal state in Solution.loadTransitionals()";
 	}
